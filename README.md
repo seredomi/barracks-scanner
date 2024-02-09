@@ -5,4 +5,4 @@ remaking barracks scanner w/ electron + react (still using the same sqlite db)
 <br/> <br/>
 additionally, this will allow me to target different platforms with ease in case the laptop we use at the CQ desk changes
 <br/> <br/>
-also this is just going to simplify maintenance on the program drastically. i might have started with this framework, but i really wanted to learn Windows SDK. now that i know what a shitshow it is in terms of documentation and implementation, i think i'll start with a more modern approach like this in the future
+also this is just going to simplify maintenance on the program drastically. i might have started with Windows SDK to learn more about it, but now that i know what a shitshow it is in terms of documentation and implementation, i think i'll start with a more modern approach like this in the future
