@@ -1,5 +1,5 @@
 # barracks scanner v2
-remaking barracks scanner as electron app
+remaking barracks scanner w/ electron + react (still using the same sqlite db)
 ## i'm doing this for several reasons ...
 ... but mainly, my commander asked me when i could demo it, and i told him to give me 6 weeks, so i need to accelerate development
 <br/> <br/>
