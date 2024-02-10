@@ -5,19 +5,8 @@ import { Content, HeaderContainer, Header, HeaderName, SideNavItems, SideNav, Si
 import { Outlet } from 'react-router-dom';
 import { ScanBarcode, User, History } from 'lucide-react';
 
-function Title() {
-    const buildingNo = useState(6070);
-    return (
-        <Header aria-label="Window Header" className="globalHeader">
-            <HeaderName prefix={buildingNo}>
-                Barracks Personnel Identifier
-            </HeaderName>
-        </Header>
-    )
 
-}
-
-function NavBar() {
+export function NavBar() {
     const [selected, setSelected] = useState('id-scanner');
     const handleIdScannerClick = () => { setSelected('id-scanner'); }
     const handlePersonnelClick = () => { setSelected('personnel'); }
@@ -51,16 +40,5 @@ function NavBar() {
                 </SideNavLink>
             </SideNavItems>
         </SideNav>
-    )
-}
-export default function RootPage() {
-    return (
-        <>
-            <Title />
-            <NavBar />
-            <Content>
-                <Outlet />
-            </Content>
-        </>
     )
 }

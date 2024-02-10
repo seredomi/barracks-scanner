@@ -1,29 +1,30 @@
 import * as React from 'react';
-import ReactDOM from 'react-dom/client';
-import { ScanBarcode, User, History } from 'lucide-react';
-import { createRoot } from 'react-dom/client';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useState } from 'react';
+import { Header, HeaderName } from '@carbon/react';
+import { NavBar } from './components/nav-bar.jsx';
 
-import RootPage from './pages/root.jsx';
-import IdScannerPage from './pages/id-scanner.jsx';
-import PersonnelPage from './pages/personnel.jsx';
-import ScanHistoryPage from './pages/scan-history.jsx';
+import { createRoot } from 'react-dom/client';
 
 const root = createRoot(document.body);
-root.render(MyRouter());
+root.render(App());
 
-function MyRouter() {
-    const router = createBrowserRouter([
-        { path: "/main_window", element: <RootPage />,
-            children: [
-                { path: "/main_window/id-scanner", element: <IdScannerPage /> },
-                { path: "/main_window/personnel", element: <PersonnelPage /> },
-                { path: "/main_window/scan_history", element: <ScanHistoryPage /> },
-            ]
-        },
-    ]);
-
+function Title() {
+    const buildingNo = useState(6070);
     return (
-        <RouterProvider router={router} />
+        <Header aria-label="Window Header" className="globalHeader">
+            <HeaderName prefix={buildingNo}>
+                Barracks Personnel Identifier
+            </HeaderName>
+        </Header>
+    )
+}
+
+function App() {
+    return (
+        <>
+            <Title />
+            <NavBar />
+        </>
     );
+
 }
