@@ -1,11 +1,24 @@
 import * as React from 'react';
 import { useState } from 'react';
-import { Header, HeaderName } from '@carbon/react';
+import { Header, HeaderName, Content } from '@carbon/react';
 import { NavBar } from './components/nav-bar.jsx';
+import { PageContent } from './components/page-content.jsx';
 
-import { createRoot } from 'react-dom/client';
+export default function App() {
+    const [selected, setSelected] = useState('id-scanner');
+    const selectProps = { selected, setSelected };
 
+    return (
+        <>
+            <Title />
+            <NavBar {...selectProps} />
+            <Content>
+                <PageContent {...selectProps} />
+            </Content>
+        </>
+    );
 
+}
 
 function Title() {
     const buildingNo = useState(6070);
@@ -16,17 +29,4 @@ function Title() {
             </HeaderName>
         </Header>
     )
-}
-
-export default function App() {
-    const [selected, setSelected] = useState('id-scanner');
-    const selectProps = { selected, setSelected };
-
-    return (
-        <>
-            <Title />
-            <NavBar {...selectProps} />
-        </>
-    );
-
 }
