@@ -13,6 +13,7 @@ const createWindow = () => {
     height: 600,
     titleBarStyle: 'hidden',
     titleBarOverlay: true,
+    icon: 'src/assets/user-check.png',
     webPreferences: {
       preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
     },
