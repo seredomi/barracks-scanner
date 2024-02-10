@@ -5,8 +5,7 @@ import { NavBar } from './components/nav-bar.jsx';
 
 import { createRoot } from 'react-dom/client';
 
-const root = createRoot(document.body);
-root.render(App());
+
 
 function Title() {
     const buildingNo = useState(6070);
@@ -19,11 +18,14 @@ function Title() {
     )
 }
 
-function App() {
+export default function App() {
+    const [selected, setSelected] = useState('id-scanner');
+    const selectProps = { selected, setSelected };
+
     return (
         <>
             <Title />
-            <NavBar />
+            <NavBar {...selectProps} />
         </>
     );
 
