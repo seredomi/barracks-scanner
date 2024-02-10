@@ -6,7 +6,7 @@ import { ScanBarcode, User, History } from 'lucide-react';
 
 function Title() {
     return (
-        <Header aria-label="Window Header">
+        <Header aria-label="Window Header" className="globalHeader">
             <HeaderName prefix="6070">
                 Barracks Personnel Identifier
             </HeaderName>
@@ -24,9 +24,9 @@ function NavBar() {
             aria-label="Side navigation"
         >
             <SideNavItems>
-                <SideNavLink renderIcon={ScanBarcode} href="/main_window/id-scanner" large>ID Scanner</SideNavLink>
-                <SideNavLink renderIcon={User} href="/main_window/personnel" large>Personnel</SideNavLink>
-                <SideNavLink renderIcon={History} href="/main_window/scan-history" large>Scan History</SideNavLink>
+                <SideNavLink renderIcon={ScanBarcode} aref="id-scanner" large isActive={true}>ID Scanner</SideNavLink>
+                <SideNavLink renderIcon={User} aref="personnel" large>Personnel</SideNavLink>
+                <SideNavLink renderIcon={History} aref="scan-history" large>Scan History</SideNavLink>
             </SideNavItems>
         </SideNav>
     )
@@ -36,7 +36,9 @@ export default function RootPage() {
         <>
             <Title />
             <NavBar />
-            <Outlet />
+            <Content>
+                <Outlet />
+            </Content>
         </>
     )
 }
