@@ -6,11 +6,10 @@ import { Outlet } from 'react-router-dom';
 import { ScanBarcode, User, History } from 'lucide-react';
 
 
-export function NavBar() {
-    const [selected, setSelected] = useState('id-scanner');
-    const handleIdScannerClick = () => { setSelected('id-scanner'); }
-    const handlePersonnelClick = () => { setSelected('personnel'); }
-    const handleScanHistoryClick = () => { setSelected('scan-history'); }
+export function NavBar(props) {
+    const handleIdScannerClick = () => { props.setSelected('id-scanner'); }
+    const handlePersonnelClick = () => { props.setSelected('personnel'); }
+    const handleScanHistoryClick = () => { props.setSelected('scan-history'); }
 
     return (
         <SideNav
@@ -21,19 +20,19 @@ export function NavBar() {
         >
             <SideNavItems>
                 <SideNavLink
-                    isActive={selected === 'id-scanner'}
+                    isActive={props.selected === 'id-scanner'}
                     onClick={handleIdScannerClick}
                     renderIcon={ScanBarcode} large >
                     ID Scanner
                 </SideNavLink>
                 <SideNavLink
-                    isActive={selected === 'personnel'} 
+                    isActive={props.selected === 'personnel'} 
                     onClick={handlePersonnelClick}
                     renderIcon={User} large >
                     Personnel
                 </SideNavLink>
                 <SideNavLink
-                    isActive={selected === 'scan-history'} 
+                    isActive={props.selected === 'scan-history'} 
                     onClick={handleScanHistoryClick}
                     renderIcon={History} large >
                     Scan History
