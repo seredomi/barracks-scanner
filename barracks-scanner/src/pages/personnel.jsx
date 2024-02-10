@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function PersonnelPage() {
+export function PersonnelPage() {
     return (
         <div>
             <h2>Personnel</h2>
