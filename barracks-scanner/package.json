@@ -39,6 +39,7 @@
     "node-sass": "^9.0.0",
     "postcss-loader": "^8.1.0",
     "react-feather": "^2.0.10",
+    "react-router-dom": "^6.22.0",
     "sass": "^1.70.0",
     "sass-loader": "^14.1.0",
     "style-loader": "^3.3.4"
@@ -49,7 +50,6 @@
     "@mui/material": "^5.15.9",
     "electron-squirrel-startup": "^1.0.0",
     "lucide-react": "^0.323.0",
-    "next": "^14.1.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
