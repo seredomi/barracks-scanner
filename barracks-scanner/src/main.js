@@ -11,6 +11,8 @@ const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    minWidth: 600,
+    minHeight: 400,
     titleBarStyle: 'hidden',
     titleBarOverlay: true,
     icon: 'src/assets/user-check.png',
