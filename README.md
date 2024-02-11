@@ -22,3 +22,4 @@ also this is just going to simplify maintenance on the program drastically. i mi
 - [ ] edit personnel
 - [ ] pull scan history from db
 - [ ] filter / search history
+- [ ] settings
