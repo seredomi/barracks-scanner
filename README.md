@@ -1,5 +1,7 @@
 # barracks scanner v2
-remaking barracks scanner as a webapp
+remaking barracks scanner as an electron app
+![demo](https://github.com/seredomi/barracks-scanner/assets/100106089/4e9a5150-616c-4a47-b062-a8ae44f5fcaa)
+
 ## i'm doing this for several reasons ...
 ... but mainly, my commander asked me when i could demo it, and i told him to give me 6 weeks, so i need to accelerate development
 <br/> <br/>
