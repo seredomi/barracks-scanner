@@ -9,37 +9,62 @@ import { NavBar } from './components/nav-bar.jsx';
 import { PageContent } from './components/page-content.jsx';
 
 
-
 const root = createRoot(document.body);
-root.render(<App />);
+root.render( <App />);
 
 export default function App() {
-    const [selected, setSelected] = useState('id-scanner');
-    const [inputBuffer, setInputBuffer] = useState('');
-    const selectProps = { selected, setSelected };
 
-    window.addEventListener('keyup', handleKeyPress);
-    function handleKeyPress(event) {
-        setInputBuffer(inputBuffer + event.key);
-        if (selected == 'id-scanner') {
-            if (event.key == 'Enter') {
-                let newString = '';
-                for (let i = 0; i < inputBuffer.length; i += 2) {
-                    newString += inputBuffer[i];
+    const [page, setPage] = useState('id-scanner'); // can be 'id-scanner', 'personnel', or 'scan-history'
+    const [scan, setScan] = useState([]); // stores keyboard input until a flush
+    const [status, setStatus] = useState(false); // stores if window in focus or not
+
+    const props = { page, setPage, scan, setScan, status, setStatus };
+
+    let tempBuffer = [];
+    let charTimes = [];
+
+    window.addEventListener('keyup', (event) => handleInput(event));
+    
+    // this function flushes the buffer to id after enter is pressed
+    // it distinguishes between human input and barcode input based on time b/w key presses
+    // the only edge case it doesn't handle is if a user mashes the keyboard while scanning
+    function handleInput(event) {
+        if (page !== 'id-scanner') {
+            console.log("not scanning!");
+        }
+        else {
+            charTimes.push(performance.now());
+            if (event.key === 'Enter') {
+                let startIndex = 0;
+                for (let i = 1; i < charTimes.length; i++) {
+                    if (charTimes[i] - charTimes[i-1] > 35) {
+                        startIndex = i;
+                    }
                 }
-                console.log(newString);
-                setInputBuffer('');
+
+                if (startIndex < charTimes.length - 1) {
+                    if (startIndex !== 0) {
+                        tempBuffer = tempBuffer.slice(startIndex);
+                    }
+                    console.log(tempBuffer);
+
+                    tempBuffer = [];
+                    charTimes = [];
+                }
+            }
+            else {
+                tempBuffer.push(event.key);
             }
         }
-    }
 
+    }
 
     return (
         <>
             <Title />
-            <NavBar {...selectProps} />
+            <NavBar {...props} />
             <Content>
-                <PageContent {...selectProps} />
+                <PageContent {...props} />
             </Content>
         </>
     );
