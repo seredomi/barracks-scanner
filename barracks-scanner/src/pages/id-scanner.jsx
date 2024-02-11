@@ -1,19 +1,19 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { FlexGrid, Row, Column, Button, Tile, ComposedModal } from '@carbon/react';
-import { Check, Info, AlertTriangle } from 'lucide-react';
+import { Check, AlertTriangle } from 'lucide-react';
 
 
 function Indicator(props) {
     
-    const handleStatusClick = () => { props.setReady(true); }
+    const handleStatusClick = () => { props.setStatus(true); }
 
-    if (props.ready) {
+    if (props.status) {
         return (
             <Button kind='tertiary' disabled>
                 <div style={{display:'flex'}}>
                     <Check size='20'/>
-                    <p>&nbsp;&nbsp;&nbsp;Scan back of ID when ready</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Scan back of ID when ready</p>
                 </div>
             </Button>
         )
@@ -23,26 +23,24 @@ function Indicator(props) {
             <Button kind='danger' onClick={handleStatusClick}>
                 <div style={{display:'flex'}}>
                     <AlertTriangle size='20' />
-                    <p>&nbsp;&nbsp;&nbsp;Click here before scanning!</p>
+                    <p>&nbsp;&nbsp;&nbsp;&nbsp;Click here before scanning!</p>
                 </div>
             </Button>
         )
     }
 }
 
-export default function IdScannerPage() {
-    const [id, setId] = useState('');
-    const [ready, setReady] = useState(false);
+export function IdScannerPage(props) {
 
-    const readyProps = { ready, setReady };
-
+    const scanComplete = false;
+    
     return (
         <FlexGrid>
             <Row>
                 <Column>
                     <h2>ID Scanner</h2>
                     <br/> <br/>
-                    <Indicator {...readyProps} />
+                    <Indicator {...props} />
                 </Column>
             </Row>
         </FlexGrid>
