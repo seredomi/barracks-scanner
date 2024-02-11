@@ -2,14 +2,14 @@ import * as React from 'react';
 import { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { Content, HeaderContainer, Header, HeaderName, SideNavItems, SideNav, SideNavLink } from '@carbon/react';
-import { Outlet } from 'react-router-dom';
 import { ScanBarcode, User, History } from 'lucide-react';
 
 
 export function NavBar(props) {
-    const handleIdScannerClick = () => { props.setSelected('id-scanner'); }
-    const handlePersonnelClick = () => { props.setSelected('personnel'); }
-    const handleScanHistoryClick = () => { props.setSelected('scan-history'); }
+
+    const handleIdScannerClick = () => { props.setPage('id-scanner'); }
+    const handlePersonnelClick = () => { props.setPage('personnel'); }
+    const handleScanHistoryClick = () => { props.setPage('scan-history'); }
 
     return (
         <SideNav
@@ -20,19 +20,19 @@ export function NavBar(props) {
         >
             <SideNavItems>
                 <SideNavLink
-                    isActive={props.selected === 'id-scanner'}
+                    isActive={props.page === 'id-scanner'}
                     onClick={handleIdScannerClick}
                     renderIcon={ScanBarcode} large >
                     ID Scanner
                 </SideNavLink>
                 <SideNavLink
-                    isActive={props.selected === 'personnel'} 
+                    isActive={props.page === 'personnel'} 
                     onClick={handlePersonnelClick}
                     renderIcon={User} large >
                     Personnel
                 </SideNavLink>
                 <SideNavLink
-                    isActive={props.selected === 'scan-history'} 
+                    isActive={props.page === 'scan-history'} 
                     onClick={handleScanHistoryClick}
                     renderIcon={History} large >
                     Scan History
