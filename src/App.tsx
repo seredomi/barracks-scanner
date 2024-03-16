@@ -1,6 +1,6 @@
 import "./App.scss";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { NavBar } from './components/nav-bar.jsx';
 import { PageContent } from './components/page-content.jsx';
 // import { event } from "@tauri-apps/api";
@@ -14,11 +14,16 @@ function App() {
   const [readyToScan, setReadyToScan] = useState<boolean>(true);
   const pageProps = { currPage, setCurrPage, readyToScan, setReadyToScan };
 
+  useEffect(() => {
+    console.log("page: " + currPage);
+  }, [currPage]);
+
   let keyBuffer: string[] = [];
   let keyTimes: number[] = [];
 
   window.addEventListener('keyup', (e) => {
-    if (currPage === 'id-scanner') {
+    console.log('from in here: ' + currPage)
+    if (currPage == "id-scanner") {
       handleInput(e);
     }
     else {
@@ -60,6 +65,8 @@ function App() {
         keyBuffer.push(event.key);
     }
   }
+
+  console.log("page: " + currPage);
 
   return (
     <>
