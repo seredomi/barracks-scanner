@@ -1,53 +1,72 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/tauri";
-import "./App.css";
+import "./App.scss";
+
+import { useState } from 'react';
+import { NavBar } from './components/nav-bar.jsx';
+import { PageContent } from './components/page-content.jsx';
+// import { event } from "@tauri-apps/api";
+
+export type page = "id-scanner" | "personnel" | "scan-history";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke("greet", { name }));
+
+  const [currPage, setCurrPage] = useState<page>("id-scanner");
+  const [readyToScan, setReadyToScan] = useState<boolean>(true);
+  const pageProps = { currPage, setCurrPage, readyToScan, setReadyToScan };
+
+  let keyBuffer: string[] = [];
+  let keyTimes: number[] = [];
+
+  window.addEventListener('keyup', (e) => {
+    if (currPage === 'id-scanner') {
+      handleInput(e);
+    }
+    else {
+      console.log("not on id scanner page, ignoring input");
+    }
+  });
+
+  // this function flushes the buffer to id after enter is pressed
+  // it distinguishes between human input and barcode input based on time b/w key presses
+  // the only edge case it doesn't handle is if a user mashes the keyboard while scanning
+  function handleInput(event: KeyboardEvent) {
+
+    // first we push the time of the key press to the keyTimes array
+    keyTimes.push(performance.now());
+
+    // if enter
+    if (event.key === 'Enter') {
+
+      // skip all slow key presses until fast scanner-like key presses
+      let startIndex = 0;
+      for (let i = 1; i < keyTimes.length; i++) {
+          if (keyTimes[i] - keyTimes[i-1] > 35) {
+              startIndex = i;
+          }
+      }
+      if (startIndex < keyTimes.length - 1) {
+        if (startIndex !== 0) {
+            keyBuffer = keyBuffer.slice(startIndex);
+        }
+        // TODO: send scan to main.rs to be processed
+        console.log(keyBuffer);
+
+        keyBuffer = [];
+        keyTimes = [];
+      }
+    }
+    // if it's not enter, just push the key to the buffer
+    else {
+        keyBuffer.push(event.key);
+    }
   }
 
   return (
-    <div className="container">
-      <h1>Welcome to Tauri!</h1>
-
-      <div className="row">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-
-      <p>{greetMsg}</p>
-    </div>
-  );
+    <>
+      <NavBar {...pageProps} />
+      {PageContent(currPage)}
+    </>
+  )
 }
 
 export default App;
