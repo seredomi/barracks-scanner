@@ -10,7 +10,7 @@ function Indicator(scannerProps) {
         return (
             <Button kind='tertiary' disabled>
                 <div style={{display:'flex'}}>
-                    <Check size='20' /> <p>Ready to scan</p>
+                    <Check className='buttonIcon' /> <p>Ready to scan</p>
 
                 </div>
             </Button>
@@ -20,7 +20,7 @@ function Indicator(scannerProps) {
         return (
             <Button kind='danger' onClick={handleStatusClick}>
                 <div style={{display:'flex'}}>
-                    <AlertTriangle size='20' /> <p>Click here before scanning!</p>
+                    <AlertTriangle className='buttonIcon' /> <p>Click here before scanning!</p>
                 </div>
             </Button>
         )
@@ -28,17 +28,11 @@ function Indicator(scannerProps) {
 
 }
 
-async function handleFocusChange(setReadyToScan) {
-
-    const handleFocus = await appWindow.onFocusChanged(({ payload: focused }) => {
-        if (focused) {
-            setReadyToScan(true);
-        }
-        else {
-            setReadyToScan(false);
-        }
+async function handleFocusChange(setReadyToScan: (a: boolean) => void ) {
+    await appWindow.onFocusChanged(({ payload: focused }) => {
+        if (focused) { setReadyToScan(true); }
+        else { setReadyToScan(false); }
     })
-
 }
 
 export function IDScannerPage(scannerProps) {
