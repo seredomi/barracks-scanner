@@ -64,7 +64,7 @@ function App() {
   return (
     <>
       <NavBar {...pageProps} />
-      {PageContent(currPage)}
+      <PageContent {...pageProps} />
     </>
   )
 }

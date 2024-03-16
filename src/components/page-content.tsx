@@ -6,10 +6,10 @@ import { PersonnelPage } from './pages/personnel.tsx';
 import { ScanHistoryPage } from './pages/scan-history.tsx';
 import { page } from '../App.tsx';
 
-function switchPage(currPage: page) {
-    switch (currPage) {
+function switchPage(pageProps) {
+    switch (pageProps.currPage) {
         case "id-scanner":
-            return <IDScannerPage />;
+            return <IDScannerPage {...pageProps} />;
         case "personnel":
             return <PersonnelPage />;
         case "scan-history":
@@ -17,10 +17,10 @@ function switchPage(currPage: page) {
     }
 }
 
-export function PageContent(currPage: page) {
+export function PageContent(pageProps) {
     return (
         <Content>
-            {switchPage(currPage)}
+            {switchPage(pageProps)}
         </Content>
     )
 }
