@@ -2,7 +2,7 @@
   "build": {
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
-    "devPath": "http://localhost:1420",
+    "devPath": "http://localhost:1421",
     "distDir": "../dist"
   },
   "package": {
@@ -15,13 +15,27 @@
       "shell": {
         "all": false,
         "open": true
+      },
+
+      "window": {
+        "all": false,
+        "close": true,
+        "hide": true,
+        "show": true,
+        "minimize": true,
+        "unminimize": true,
+        "startDragging": true
       }
     },
     "windows": [
       {
-        "title": "barracks-scanner",
+        "title": "Barracks Personnel Identifier",
         "width": 800,
-        "height": 600
+        "height": 600,
+        "hiddenTitle": true,
+        "titleBarStyle": "Transparent",
+        "decorations": true
+
       }
     ],
     "security": {
