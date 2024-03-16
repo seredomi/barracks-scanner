@@ -23,7 +23,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [ ] program icon
 - [ ] scanning
   - [x] handle scan input
-  - [ ] status
+  - [x] status
   - [ ] query database
   - [ ] return results
 - [ ] personnel
