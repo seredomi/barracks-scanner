@@ -1,5 +1,4 @@
 import { SideNav, SideNavItems, SideNavLink } from '@carbon/react';
-import { ScanBarcode, User, History } from 'lucide-react';
 import { ScanAlt, UserMultiple, Time } from '@carbon/icons-react';
 
 // import { page } from '../App';

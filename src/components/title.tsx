@@ -1,7 +1,7 @@
 
 import { Header, HeaderName, HeaderGlobalBar, HeaderGlobalAction } from '@carbon/react';
 import { appWindow } from '@tauri-apps/api/window';
-import { Minimize, Maximize, Close } from '@carbon/icons-react'
+import { Close } from '@carbon/icons-react'
 
 export function Title() {
   const buildingNo = 'P6070';
