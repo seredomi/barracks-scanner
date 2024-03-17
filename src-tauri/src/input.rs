@@ -36,10 +36,12 @@ pub fn detect_scans(query_tx: mpsc::Sender<String>) {
                     if start < key_buff.len() {
                         // return slice from start to end
                         let discard = key_buff[..start].join("");
-                        let keep = key_buff[start..].join("");
+                        let keep = key_buff[start..key_buff.len()-1].join("");
                         println!("Discarded: {}", discard);
                         if keep.len() > 1 { 
-                            query_tx.send(String::from("select * from personnel where id = ") + &keep).unwrap();
+                            let query = format!("SELECT * FROM personnel WHERE id = '{}';", &keep);
+                            println!("sending query: ~{}~", query);
+                            query_tx.send(query).unwrap();
                         }
                     }
                     else {
