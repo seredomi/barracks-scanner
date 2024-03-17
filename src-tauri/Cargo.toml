@@ -2,7 +2,7 @@
 name = "barracks-scanner"
 version = "0.0.0"
 description = "Barracks Personnel Identifier"
-authors = ["sereno"]
+authors = ["Sereno Dominguez"]
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
