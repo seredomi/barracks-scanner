@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@carbon/icons-react": "^11.38.0",
     "@carbon/react": "^1.53.0",
     "@tauri-apps/api": "^1",
     "@types/carbon-components-react": "^7.55.10",

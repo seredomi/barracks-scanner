@@ -1,5 +1,7 @@
 import { SideNav, SideNavItems, SideNavLink } from '@carbon/react';
 import { ScanBarcode, User, History } from 'lucide-react';
+import { ScanAlt, UserMultiple, Time } from '@carbon/icons-react';
+
 // import { page } from '../App';
 
 export function NavBar(pageProps: any) {
@@ -28,19 +30,19 @@ export function NavBar(pageProps: any) {
                 <SideNavLink 
                     isActive={pageProps.currPage === "id-scanner"}
                     onClick={handleIdScannerClick}
-                    renderIcon={ScanBarcode} large >
+                    renderIcon={ScanAlt} large >
                     ID Scanner
                 </SideNavLink>
                 <SideNavLink
                     isActive={pageProps.currPage === "personnel"}
                     onClick={handlePersonnelClick}
-                    renderIcon={User} large >
+                    renderIcon={UserMultiple} large >
                     Personnel
                 </SideNavLink>
                 <SideNavLink 
                     isActive={pageProps.currPage === "scan-history"}
                     onClick={handleScanHistoryClick}
-                    renderIcon={History} large >
+                    renderIcon={Time} large >
                     Scan History
                 </SideNavLink>
             </SideNavItems>
