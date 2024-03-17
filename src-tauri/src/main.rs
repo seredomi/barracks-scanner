@@ -13,7 +13,6 @@ fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-
 fn detect_scans() {
     let mut key_buff: Vec<String> = Vec::new();
     let mut key_times: Vec<SystemTime> = Vec::new();
@@ -24,9 +23,14 @@ fn detect_scans() {
         // filter out key release events
         match event.name {
             Some(string) => {
+
+                key_times.push(SystemTime::now());
+                key_buff.push(string.clone());
+
                 // if enter is pressed, filter and flush buffer
                 if string == "\r" {
                     // distinguish bw keypresses and scan input based on input speed
+
 
                     // move start to where fast scanner-like input begins
                     let mut start: usize = 0;
@@ -52,9 +56,6 @@ fn detect_scans() {
                     }
                     key_buff.clear();
                     key_times.clear();
-                } else {
-                    key_times.push(SystemTime::now());
-                    key_buff.push(string);
                 }
             },
             None => (),
@@ -67,6 +68,7 @@ fn detect_scans() {
 
 fn main() {
 
+    // in the future i want this thread to only run when the ID Scanner page is open
     thread::spawn(|| detect_scans());
 
     tauri::Builder::default()
