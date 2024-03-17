@@ -14,7 +14,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - React (useState, compatibility, documentation)
 - Tauri (runs lighter than Electron, target multiple systems)
 - IBM's Carbon Design System (good looks)
-- Sqlite3 since it only needs a local db
+- Sqlite3 (only needs to run locally)
 ## roadmap
 - [ ] ui
   - [x] navigation
