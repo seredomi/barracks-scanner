@@ -1,6 +1,5 @@
 use rdev::{listen, Event};
-use std::time::SystemTime;
-use std::time::Duration;
+use std::time::{ SystemTime, Duration };
 
 pub fn detect_scans() {
 
