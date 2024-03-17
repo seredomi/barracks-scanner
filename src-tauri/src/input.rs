@@ -1,7 +1,8 @@
 use rdev::{listen, Event};
 use std::time::{ SystemTime, Duration };
+use std::sync::mpsc;
 
-pub fn detect_scans() {
+pub fn detect_scans(query_tx: mpsc::Sender<String>) {
 
     let mut key_buff: Vec<String> = Vec::new();
     let mut key_times: Vec<SystemTime> = Vec::new();
@@ -37,10 +38,12 @@ pub fn detect_scans() {
                         let discard = key_buff[..start].join("");
                         let keep = key_buff[start..].join("");
                         println!("Discarded: {}", discard);
-                        println!("Scanned: {}", keep);
+                        if keep.len() > 1 { 
+                            query_tx.send(String::from("select * from personnel where id = ") + &keep).unwrap();
+                        }
                     }
                     else {
-                        println!("Discarded nada");
+                        println!("Discarded nothing");
                         println!("Scanned: {}", key_buff.join(""));
                     }
                     key_buff.clear();

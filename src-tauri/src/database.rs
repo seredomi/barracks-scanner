@@ -1,6 +1,7 @@
 use rusqlite::{params, Connection, Result};
 use chrono::{ DateTime, Local };
 use std::collections::HashSet;
+use std::sync::mpsc;
 
 struct Person {
     id: String,
@@ -12,7 +13,7 @@ struct Person {
     leave_date: DateTime<Local>
 }
 
-pub fn connect_and_wait() {
+pub fn connect_and_wait(query_rx: mpsc::Receiver<String>) {
 
     let ranks: HashSet<&str> = HashSet::from(["PVT", "PV2", "PFC", "SPC", "CPL", "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM", "WO1", "CW2", "CW3", "CW4", "CW5", "2LT", "1LT", "CPT", "MAJ", "LTC", "COL", "BG", "MG", "LTG", "GEN", "GA", "CIV"]);
     let groups: HashSet<&str> = HashSet::from(["Resident", "Guest", "Hotel Divarty", "Rotational Unit", "Chain Of Command", "Other"]);
@@ -37,5 +38,10 @@ pub fn connect_and_wait() {
     //         date DATE,
     //         time TIME )"
     // )?;
+
+
+    for query in query_rx {
+        println!("db got: {}", query);
+    }
 
 }
