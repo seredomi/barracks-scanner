@@ -34,7 +34,7 @@
         "height": 600,
         "hiddenTitle": true,
         "titleBarStyle": "Transparent",
-        "decorations": true
+        "decorations": false
 
       }
     ],

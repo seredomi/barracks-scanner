@@ -1,6 +1,7 @@
 import "./App.scss";
 
 import { useState } from 'react';
+import { Title } from './components/title';
 import { NavBar } from './components/nav-bar.jsx';
 import { PageContent } from './components/page-content.jsx';
 
@@ -14,6 +15,7 @@ function App() {
 
   return (
     <>
+      <Title />
       <NavBar {...pageProps} />
       <PageContent {...pageProps} />
     </>
