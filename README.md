@@ -25,7 +25,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [ ] scanning
   - [x] handle scan input
   - [x] status
-  - [ ] query database
+  - [x] query database
   - [ ] return results
 - [ ] personnel
   - [ ] display all
