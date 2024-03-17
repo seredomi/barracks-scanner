@@ -1,6 +1,6 @@
 import "./App.scss";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { NavBar } from './components/nav-bar.jsx';
 import { PageContent } from './components/page-content.jsx';
 
@@ -11,10 +11,6 @@ function App() {
   const [currPage, setCurrPage] = useState<page>("id-scanner");
   const [readyToScan, setReadyToScan] = useState<boolean>(true);
   const pageProps = { currPage, setCurrPage, readyToScan, setReadyToScan };
-
-  useEffect(() => {
-    console.log("page: " + currPage);
-  }, [currPage]);
 
   return (
     <>

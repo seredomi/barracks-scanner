@@ -35,46 +35,6 @@ function ReadyIndicator(scannerProps: any) {
 
 export function IDScannerPage(scannerProps: any) {
 
-  // let keyBuffer: string[] = [];
-  // let keyTimes: number[] = [];
-
-  // window.addEventListener('keyup', (e) => { handleInput(e); });
-
-  // this function flushes the buffer to id after enter is pressed
-  // it distinguishes between human input and barcode input based on time b/w key presses
-  // the only edge case it doesn't handle is if a user mashes the keyboard while scanning
-    // function handleInput(event: KeyboardEvent) {
-
-    //     // first we push the time of the key press to the keyTimes array
-    //     keyTimes.push(performance.now());
-
-    //     // if enter
-    //     if (event.key === 'Enter') {
-
-    //     // skip all slow key presses until fast scanner-like key presses
-    //     let startIndex = 0;
-    //     for (let i = 1; i < keyTimes.length; i++) {
-    //         if (keyTimes[i] - keyTimes[i-1] > 35) {
-    //             startIndex = i;
-    //         }
-    //     }
-    //     if (startIndex < keyTimes.length - 1) {
-    //         if (startIndex !== 0) {
-    //             keyBuffer = keyBuffer.slice(startIndex);
-    //         }
-    //         // TODO: send scan to main.rs to be processed
-    //         console.log(keyBuffer);
-
-    //         keyBuffer = [];
-    //         keyTimes = [];
-    //     }
-    //     }
-    //     // if it's not enter, just push the key to the buffer
-    //     else {
-    //         keyBuffer.push(event.key);
-    //     }
-    // }
-
     handleFocusChange(scannerProps.setReadyToScan);
 
     return (
