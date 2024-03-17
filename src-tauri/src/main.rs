@@ -11,8 +11,12 @@ fn greet(name: &str) -> String {
 }
 
 mod input;
+mod database;
 
 fn main() {
+
+    // connect to database and await calls
+    thread::spawn(|| database::connect_and_wait());
 
     // in the future i want this thread to only run when the ID Scanner page is open
     thread::spawn(|| input::detect_scans());
