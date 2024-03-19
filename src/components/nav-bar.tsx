@@ -20,19 +20,19 @@ const NavBar = () => {
             <SideNavItems>
                 <SideNavLink 
                     isActive={currPage === "id-scanner"}
-                    onClick={() => dispatch(setCurrentPage("id-scanner"))}
+                    onClick={() => { if (currPage !== "id-scanner") { dispatch(setCurrentPage("id-scanner")) }}}
                     renderIcon={ScanAlt} large >
                     ID Scanner
                 </SideNavLink>
                 <SideNavLink
                     isActive={currPage === "personnel"}
-                    onClick={() => dispatch(setCurrentPage("personnel"))}
+                    onClick={() => { if (currPage !== "personnel") { dispatch(setCurrentPage("personnel")) }}}
                     renderIcon={UserMultiple} large >
                     Personnel
                 </SideNavLink>
                 <SideNavLink 
                     isActive={currPage === "scan-history"}
-                    onClick={() => dispatch(setCurrentPage("scan-history"))}
+                    onClick={() => { if (currPage !== "scan-history") { dispatch(setCurrentPage("scan-history")) }}}
                     renderIcon={Time} large >
                     Scan History
                 </SideNavLink>
