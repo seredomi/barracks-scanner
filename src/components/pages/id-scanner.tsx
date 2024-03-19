@@ -4,8 +4,8 @@ import { appWindow } from '@tauri-apps/api/window';
 
 async function handleFocusChange(setReadyToScan: (a: boolean) => void ) {
     await appWindow.onFocusChanged(({ payload: focused }) => {
-        if (focused) { setReadyToScan(true); }
-        else { setReadyToScan(false); }
+        if (focused) { setReadyToScan(true) }
+        else { setReadyToScan(false) }
     })
 }
 

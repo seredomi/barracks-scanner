@@ -3,7 +3,7 @@ import { Header, HeaderName, HeaderGlobalBar, HeaderGlobalAction } from '@carbon
 import { appWindow } from '@tauri-apps/api/window';
 import { Close } from '@carbon/icons-react'
 
-export function Title() {
+const Title = () => {
   const buildingNo = 'P6070';
   return (
     <Header aria-label='window title' data-tauri-drag-region className='window-title' >
@@ -18,3 +18,5 @@ export function Title() {
     </Header>
   )
 }
+
+export default Title;

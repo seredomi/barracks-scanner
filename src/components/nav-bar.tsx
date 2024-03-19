@@ -1,22 +1,14 @@
 import { SideNav, SideNavItems, SideNavLink } from '@carbon/react';
 import { ScanAlt, UserMultiple, Time } from '@carbon/icons-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setCurrentPage } from '../store'
 
 // import { page } from '../App';
 
-export function NavBar(pageProps: any) {
+const NavBar = () => {
 
-    const handleIdScannerClick = () => {
-        pageProps.setCurrPage("id-scanner") ;
-        pageProps.setReadyToScan(true);
-    };
-    const handlePersonnelClick = () => {
-        pageProps.setCurrPage("personnel") ;
-        pageProps.setReadyToScan(false);
-    };
-    const handleScanHistoryClick = () => {
-        pageProps.setCurrPage("scan-history") ;
-        pageProps.setReadyToScan(false);
-    };
+    const dispatch = useDispatch();
+    const currPage = useSelector((state: any) => state.page.currentPage);
 
     return (
         <SideNav
@@ -27,20 +19,20 @@ export function NavBar(pageProps: any) {
         >
             <SideNavItems>
                 <SideNavLink 
-                    isActive={pageProps.currPage === "id-scanner"}
-                    onClick={handleIdScannerClick}
+                    isActive={currPage === "id-scanner"}
+                    onClick={() => dispatch(setCurrentPage("id-scanner"))}
                     renderIcon={ScanAlt} large >
                     ID Scanner
                 </SideNavLink>
                 <SideNavLink
-                    isActive={pageProps.currPage === "personnel"}
-                    onClick={handlePersonnelClick}
+                    isActive={currPage === "personnel"}
+                    onClick={() => dispatch(setCurrentPage("personnel"))}
                     renderIcon={UserMultiple} large >
                     Personnel
                 </SideNavLink>
                 <SideNavLink 
-                    isActive={pageProps.currPage === "scan-history"}
-                    onClick={handleScanHistoryClick}
+                    isActive={currPage === "scan-history"}
+                    onClick={() => dispatch(setCurrentPage("scan-history"))}
                     renderIcon={Time} large >
                     Scan History
                 </SideNavLink>
@@ -48,3 +40,5 @@ export function NavBar(pageProps: any) {
         </SideNav>
     )
 }
+
+export default NavBar;
