@@ -2,7 +2,8 @@ use rdev::{listen, Event};
 use std::time::{ SystemTime, Duration };
 use std::sync::mpsc;
 
-pub fn detect_scans(query_tx: mpsc::Sender<String>) {
+#[tauri::command]
+pub fn await_scan(query_tx: mpsc::Sender<String>, result_rx: mpsc::Receiver<String>) -> String {
 
     let mut key_buff: Vec<String> = Vec::new();
     let mut key_times: Vec<SystemTime> = Vec::new();
@@ -57,4 +58,5 @@ pub fn detect_scans(query_tx: mpsc::Sender<String>) {
     };
 
     let _ = std::thread::spawn(|| listen(callback)).join();
+    return result_rx.recv().unwrap();
 }

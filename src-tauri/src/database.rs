@@ -1,4 +1,5 @@
-use rusqlite::{params, Connection, Result};
+use rusqlite::Connection;
+use tauri::AppHandle;
 use chrono::{ DateTime, Local };
 use std::collections::HashSet;
 use std::sync::mpsc;
@@ -23,10 +24,15 @@ fn print_person(person: &Person) {
     println!("Leave Date: {}", person.leave_date);
 }
 
-pub fn connect_and_wait(query_rx: mpsc::Receiver<String>) {
+pub fn connect(filename: String) -> Result<Connection, rusqlite::Error> {
+    let mut db = Connection::open(filename)?;
+    Ok(db)
+}
 
-    let ranks: HashSet<&str> = HashSet::from(["PVT", "PV2", "PFC", "SPC", "CPL", "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM", "WO1", "CW2", "CW3", "CW4", "CW5", "2LT", "1LT", "CPT", "MAJ", "LTC", "COL", "BG", "MG", "LTG", "GEN", "GA", "CIV"]);
-    let groups: HashSet<&str> = HashSet::from(["Resident", "Guest", "Hotel Divarty", "Rotational Unit", "Chain Of Command", "Other"]);
+pub fn connect_and_wait(result_tx: mpsc::Sender<String>, query_rx: mpsc::Receiver<String>) {
+
+    let _ranks: HashSet<&str> = HashSet::from(["PVT", "PV2", "PFC", "SPC", "CPL", "SGT", "SSG", "SFC", "MSG", "1SG", "SGM", "CSM", "WO1", "CW2", "CW3", "CW4", "CW5", "2LT", "1LT", "CPT", "MAJ", "LTC", "COL", "BG", "MG", "LTG", "GEN", "GA", "CIV"]);
+    let _groups: HashSet<&str> = HashSet::from(["Resident", "Guest", "Hotel Divarty", "Rotational Unit", "Chain Of Command", "Other"]);
 
     let conn = Connection::open("barracks.db").unwrap();
 
@@ -50,6 +56,7 @@ pub fn connect_and_wait(query_rx: mpsc::Receiver<String>) {
     // )?;
 
 
+    // this continually waits for queries to come in until the channel closes
     for query in query_rx {
         
         let stmt = conn.prepare(&query);
@@ -71,7 +78,8 @@ pub fn connect_and_wait(query_rx: mpsc::Receiver<String>) {
                 match person_iter {
                     Ok(person_iter) => {
                         for person in person_iter {
-                            print_person(&person.unwrap());
+                            // print_person(&person.unwrap());
+                            result_tx.send("found ".to_string() + &person.unwrap().first).unwrap();
                         }
                     }
                     Err(_) => {
@@ -84,5 +92,4 @@ pub fn connect_and_wait(query_rx: mpsc::Receiver<String>) {
             Err(_) => println!("Invalid query 2: ~{}~", &query)
         }
     }
-
 }
