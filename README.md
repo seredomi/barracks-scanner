@@ -10,11 +10,12 @@ also this will let me to target different platforms with ease in case the laptop
 <br/> <br/>
 and this is just going to simplify maintenance on the program drastically. i might have started with Windows SDK to learn more about it, but now that i know what a shitshow it is in terms of documentation and tooling, i think i'll start with a more modern approach like this in the future
 ## tools
-- TypeScript
-- React (useState, compatibility, documentation)
-- Tauri (runs lighter than Electron, target multiple systems)
-- IBM's Carbon Design System (good looks)
-- Sqlite3 (only needs to run locally)
+- Frontend:
+  - Typescript + React + Vite
+  - IBM's Carbon Design System
+- Backend:
+  - Rust + Tauri
+  - Sqlite
 ## roadmap
 - [ ] ui
   - [x] navigation
@@ -24,7 +25,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [ ] scanning
   - [x] handle scan input
   - [x] status
-  - [ ] query database
+  - [x] query database
   - [ ] return results
 - [ ] personnel
   - [ ] display all
