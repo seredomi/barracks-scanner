@@ -9,7 +9,7 @@ use state::{AppState, ServiceAccess};
 use tauri::{State, Manager, AppHandle};
 
 #[tauri::command]
-fn check_id(app_handle: AppHandle, id: String) -> String {
+async fn check_id(app_handle: AppHandle, id: String) -> person::Person {
     println!("Checking ID: {}", id);
     return app_handle.db(|db: &rusqlite::Connection| database::search_for_id(db, id));
 }

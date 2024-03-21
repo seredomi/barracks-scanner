@@ -12,14 +12,14 @@ fn query_to_personnel(conn: &Connection, query: &str) -> Result<Vec<Person>, rus
     let mut rows = statement.query([])?;
     let mut personnel = Vec::new();
     while let Some(row) = rows.next()? {
-        personnel.push(Person::new(
+        personnel.push(Person::new_known(
             row.get(0)?,
             row.get(1)?,
             row.get(2)?,
             row.get(3)?,
             row.get(4)?,
             row.get(5)?,
-            Local::now()
+            row.get(6)?,
         ));
     }
     match personnel.len() {
@@ -29,12 +29,18 @@ fn query_to_personnel(conn: &Connection, query: &str) -> Result<Vec<Person>, rus
 }
 
 // TODO: update to return a Person if found, empty Person if not
-pub fn search_for_id(db: &Connection, id: String) -> String {
+pub fn search_for_id(db: &Connection, id: String) -> Person {
 
     let query: String = "SELECT * FROM personnel WHERE id = '".to_string() + &id + "'";
-    let personnel: Vec<Person> = query_to_personnel(&db, &query).unwrap();
-    match personnel.len() {
-        0 => return "id: ".to_string() + &id + " not found",
-        _ => return "found ".to_string() + &personnel[0].get_full_name(),
+    let personnel = query_to_personnel(&db, &query);
+    match personnel {
+        Ok(personnel) => match personnel.len() {
+            0 => return Person::new_unknown(id),
+            _ => return personnel[0].clone(),
+        },
+        Err(_) => {
+            println!("Error in search_for_id");
+            return Person::new_unknown(id)
+        }
     }
 }
