@@ -1,5 +1,8 @@
-use chrono::{ DateTime, Local };
+use serde::{Serialize, Deserialize};
+use chrono::NaiveDate;
 
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Person {
     id: String,
     rank: String,
@@ -7,17 +10,20 @@ pub struct Person {
     first: String,
     room: String,
     group: String,
-    leave_date: DateTime<Local>,
+    #[serde(with = "date_format")]
+    leave_date: NaiveDate,
     found: bool,
 }
 
 impl Person {
-    pub fn new(id: String, rank: String, last: String, first: String, room: String, group: String, leave_date: DateTime<Local>) -> Person {
+    pub fn new_known(id: String, rank: String, last: String, first: String, room: String, group: String, leave_date: String) -> Person {
+        let leave_date: NaiveDate = NaiveDate::parse_from_str(&leave_date, date_format::FORMAT).unwrap();
         Person { id, rank, last, first, room, group, leave_date, found: true, }
     }
 
-    pub fn anon(id: String) -> Person {
-        Person { id, rank: "".to_string(), last: "".to_string(), first: "".to_string(), room: "".to_string(), group: "".to_string(), leave_date: Local::now(), found: false,}
+    pub fn new_unknown(id: String) -> Person {
+        let leave_date: NaiveDate = NaiveDate::from_ymd_opt(1, 1, 1).unwrap();
+        Person { id, rank: "".to_string(), last: "".to_string(), first: "".to_string(), room: "".to_string(), group: "".to_string(), leave_date, found: false, }
     }
 
     pub fn is_found(&self) -> bool { self.found }
@@ -27,20 +33,40 @@ impl Person {
     pub fn get_first(&self) -> &String { &self.first }
     pub fn get_room(&self) -> &String { &self.room }
     pub fn get_group(&self) -> &String { &self.group }
-    pub fn get_leave_date(&self) -> &DateTime<Local> { &self.leave_date }
+    pub fn get_leave_date(&self) -> &NaiveDate { &self.leave_date }
 
     pub fn get_full_name(&self) -> String {
         self.rank.clone() + " " + &self.first + ", " + &self.last
     }
 
+    pub fn print(&self) {
+        println!("ID: {}", self.id);
+        println!("Rank: {}", self.rank);
+        println!("Last: {}", self.last);
+        println!("First: {}", self.first);
+        println!("Room: {}", self.room);
+        println!("Group: {}", self.group);
+        println!("Leave Date: {}", self.leave_date);
+    }
+
 }
 
-pub fn print_person(person: &Person) {
-    println!("ID: {}", person.id);
-    println!("Rank: {}", person.rank);
-    println!("Last: {}", person.last);
-    println!("First: {}", person.first);
-    println!("Room: {}", person.room);
-    println!("Group: {}", person.group);
-    println!("Leave Date: {}", person.leave_date);
+mod date_format {
+    use chrono::NaiveDate;
+    use serde::{self, Deserialize, Deserializer, Serializer};
+
+    pub const FORMAT: &'static str = "%Y-%m-%d";
+
+    pub fn serialize<S> ( date: &NaiveDate, serializer: S) -> Result<S::Ok, S::Error>
+    where S: Serializer, {
+        let s = format!("{}", date.format(FORMAT));
+        serializer.serialize_str(&s)
+    }
+
+    pub fn deserialize<'de, D> ( deserializer: D) -> Result<NaiveDate, D::Error>
+    where D: Deserializer<'de>, {
+        let s = String::deserialize(deserializer)?;
+        let date = NaiveDate::parse_from_str(&s, FORMAT).map_err(serde::de::Error::custom)?;
+        Ok(date)
+    }
 }
