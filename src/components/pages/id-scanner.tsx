@@ -3,6 +3,7 @@ import { Check, AlertTriangle } from 'lucide-react';
 import { appWindow } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState } from 'react';
+import Person from '../../classes/person';
 
 
 async function checkID(idArg: string)  {
@@ -88,7 +89,16 @@ export function IDScannerPage() {
 
             // get result from checkID
             checkID(id).then(
-                (result) => { setTestButtonText(result); },
+                (result) => {
+                    let person = new Person(result);
+                    if (person.found) {
+                        setTestButtonText(person.rank + ' ' + person.last + ', ' + person.first + ': Room ' + person.room);
+                    }
+                    else {
+                        setTestButtonText('ID: ' + person.id + ' not found');
+                    }
+
+                 },
                 (error) => { setTestButtonText('Error: ' + error); }
             )
 
