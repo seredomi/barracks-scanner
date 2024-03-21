@@ -49,7 +49,7 @@ function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
 
 }
 
-export function IDScannerPage(scannerProps: any) {
+export function IDScannerPage() {
 
     const [ testButtonText, setTestButtonText ] = useState('testtt');
 
