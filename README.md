@@ -17,16 +17,20 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - Rust + Tauri
   - Sqlite
 ## roadmap
-- [ ] ui
+- [ ] general ui
   - [x] navigation
   - [x] switch to tauri
-  - [ ] custom carbon-like title bar
-  - [ ] program icon
+  - [x] custom carbon-like title bar
+  - [x] program icon
+  - [ ] replicate normal window shadow
 - [ ] scanning
   - [x] handle scan input
   - [x] status
   - [x] query database
-  - [ ] return results
+  - [x] return results
+    - [ ] serialize Person
+    - [ ] format results
+    - [ ] button to add if not found?
 - [ ] personnel
   - [ ] display all
   - [ ] filter / search
