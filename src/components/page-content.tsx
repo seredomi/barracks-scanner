@@ -20,7 +20,7 @@ const PageContent = () => {
         }
     }
 
-    return <Content> {whichPage()} </Content>
+    return <Content className='pageContent'> {whichPage()} </Content>
 }
 
 export default PageContent;
