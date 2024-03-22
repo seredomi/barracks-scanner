@@ -27,7 +27,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] switch to tauri
 - [x] custom carbon-like title bar
 - [x] program icon
- - [-] fix font issue - fonts render, but webview console error messages persist
+ - [x] fix font issue
  - [ ] replicate normal window shadow
 ### scanning
 - [x] handle scan input
@@ -45,3 +45,24 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [ ] delete
 ### scan history
 ### settings
+## other notes
+### sqlite file
+i manually moved a copy of `barracks.db` to the build directory `./src-tauri/target/release/` <br/>
+however, I'm sure this could be remedied by a premake script or implementation of a variable database filepath <br/>
+the schema i used is:
+```
+CREATE TABLE logs (id TEXT, date DATE, time TIME);
+CREATE TABLE personnel(
+  id TEXT PRIMARY KEY,
+  rank TEXT CHECK(rank IN('PVT','PV2','PFC','SPC','CPL','SGT','SSG','SFC','MSG','1SG','SGM','CSM','SMA','WO1','CW2','CW3','CW4','CW5','1LT','2LT','CPT','MAJ','LTC','COL','BG','MG','LTG','GEN','GA','CTR','CIV','')),
+  lastName TEXT,
+  firstName TEXT,
+  room TEXT,
+  groupName TEXT CHECK(groupName IN('Resident','Rotational Unit','COC','Guest','Hotel Divarty')),
+  leaveDate DATE);
+```
+### fonts
+i always get `Failed to decode downloaded font: <URL>` and `OTS parsing error: invalid sfntVersion: 1008821359` error messages in the Webview console, probably due to the url that the carbon .scss import sources its IBM Plex fonts from <br/>
+i've temporarily solved this by copying the `./node_modules/@IBM/` fonts folder int `./src` <br/>
+this allows the correct fonts to render, but the error messages persist <br/>
+this works for the executable in the target folder as well
