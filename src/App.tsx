@@ -17,8 +17,6 @@ declare global {
 
 const App = () => {
 
-  console.log("app started");
-
   return (
     <>
       <Title />

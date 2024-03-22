@@ -93,7 +93,6 @@ export function IDScannerPage() {
     window.handleInput = (e: KeyboardEvent) => {
         keyTimes.push(performance.now());
         if (e.key === "Enter") {
-            console.log('e$');
             // arbitrary limit, TODO: splice and work with latest 100 chars
             if (keyBuffer.length > 500) { keyBuffer = []; keyTimes = []; return; }
 
