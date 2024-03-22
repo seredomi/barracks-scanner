@@ -28,7 +28,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [x] status
   - [x] query database
   - [x] return results
-    - [ ] serialize Person
+    - [x] serialize Person
     - [ ] format results
     - [ ] button to add if not found?
 - [ ] personnel
