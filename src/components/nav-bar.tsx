@@ -15,7 +15,7 @@ const NavBar = () => {
             aria-label="Side navigation"
             isFixedNav={true}
             expanded={true}
-            isChildOfHeader={false}
+            isChildOfHeader={true}
         >
             <SideNavItems>
                 <SideNavLink 
