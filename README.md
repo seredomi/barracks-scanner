@@ -27,7 +27,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] switch to tauri
 - [x] custom carbon-like title bar
 - [x] program icon
- - [ ] fix font issue
+ - [-] fix font issue - fonts render, but webview console error messages persist
  - [ ] replicate normal window shadow
 ### scanning
 - [x] handle scan input
