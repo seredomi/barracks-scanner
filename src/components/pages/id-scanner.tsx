@@ -1,5 +1,5 @@
-import { FlexGrid, Row, Column, Button, Modal, ActionableNotification, ActionableNotificationProps } from '@carbon/react';
-import { Check, AlertTriangle } from 'lucide-react';
+import { FlexGrid, Row, Column, Button, ActionableNotification, ActionableNotificationProps } from '@carbon/react';
+import { Checkmark, WarningAlt } from '@carbon/icons-react';
 import { appWindow } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState } from 'react';
@@ -25,7 +25,7 @@ function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
         return (
             <Button kind='tertiary' disabled>
                 <div style={{display:'flex'}}>
-                    <Check className='buttonIcon' /> <p>Scan back of ID when ready</p>
+                    <Checkmark size='25' className='buttonIcon' /> <p>Scan back of ID when ready</p>
                 </div>
             </Button>
         )
@@ -34,7 +34,7 @@ function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
         return (
             <Button kind='danger' onClick={handleStatusClick}>
                 <div style={{display:'flex'}}>
-                    <AlertTriangle className='buttonIcon' /> <p>Click here before scanning!</p>
+                    <WarningAlt size='25' className='buttonIcon' /> <p>Click here before scanning!</p>
                 </div>
             </Button>
         )
