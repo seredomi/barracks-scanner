@@ -4,7 +4,7 @@ import { appWindow } from '@tauri-apps/api/window';
 import { Close } from '@carbon/icons-react'
 
 const Title = () => {
-  const buildingNo = 'P6070';
+  const buildingNo = '6070';
   return (
     <Theme theme='g90'>
       <Header aria-label='window title' data-tauri-drag-region className='window-title' >
