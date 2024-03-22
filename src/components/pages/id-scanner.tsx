@@ -1,4 +1,4 @@
-import { FlexGrid, Row, Column, Button } from '@carbon/react';
+import { FlexGrid, Row, Column, Button, Modal, ActionableNotification, ActionableNotificationProps } from '@carbon/react';
 import { Check, AlertTriangle } from 'lucide-react';
 import { appWindow } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
@@ -9,14 +9,6 @@ import Person from '../../classes/person';
 async function checkID(idArg: string)  {
     let test: string = await invoke('check_id', { id: idArg });
     return test;
-}
-
-function TestButton(testButtonText: String) {
-    return (
-        <Button >
-            {testButtonText}
-        </Button>
-    )
 }
 
 async function handleFocusChange(setReadyToScan: (a: boolean) => void ) {
@@ -50,27 +42,59 @@ function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
 
 }
 
+const ResultPopup = (props: {open: boolean, setOpen: (a: boolean) => void, person: Person}) => {
+    if (!props.open) { return null; }
+    let resultProps: ActionableNotificationProps;
+    if (props.person.found) {
+        resultProps = {
+            kind: 'success',
+            title: 'Authorized',
+            subtitle: props.person.rank + ' ' + props.person.last + ', ' + props.person.first + '\n' +
+                props.person.group + ' in ' + props.person.room + '\n',
+           onActionButtonClick: () => props.setOpen(false),
+            closeOnEscape: true,
+            onClose: () => props.setOpen(false),
+            lowContrast: true,
+        }
+    }
+    else {
+        resultProps = {
+            kind: 'error',
+            title: 'Unauthorized',
+            subtitle: 'ID: ' + props.person.id + ' not found. \n' +
+                "If they are authorized to stay here, add them in Personnel",
+            onActionButtonClick: () => props.setOpen(false),
+            closeOnEscape: true,
+            onClose: () => props.setOpen(false),
+            lowContrast: true,
+        }
+    }
+
+    return (
+        <ActionableNotification {...resultProps} />
+    )
+}
+
 export function IDScannerPage() {
 
-    const [ testButtonText, setTestButtonText ] = useState('testtt');
-
     const [ readyToScan, setReadyToScan ] = useState(true);
-
     handleFocusChange(setReadyToScan);
+
+    const [ resultPerson, setResultPerson ] = useState(new Person({id: "null", found: false}) );
+    const [ resultOpen, setResultOpen ] = useState(false);
+
+    const resultProps = { open: resultOpen, setOpen: setResultOpen, person: resultPerson };
 
     // scan detection
     let keyBuffer: string[] = [];
     let keyTimes: number[] = [];
 
     document.removeEventListener("keydown", window.handleInput);
-
     window.handleInput = (e: KeyboardEvent) => {
-
         keyTimes.push(performance.now());
-
         if (e.key === "Enter") {
             console.log('e$');
-            // arbitrary limit, TODO: splice by 500 and work with latest
+            // arbitrary limit, TODO: splice and work with latest 100 chars
             if (keyBuffer.length > 500) { keyBuffer = []; keyTimes = []; return; }
 
             // work our way down from end of buffer until speed is slow like a human
@@ -85,21 +109,17 @@ export function IDScannerPage() {
                 keyBuffer = keyBuffer.slice(startIdx-1);
             }
 
+            // temp fix because js reads "Shift" as a key
             let id = keyBuffer.join('').replaceAll('Shift','');
 
             // get result from checkID
+            setResultOpen(false);
             checkID(id).then(
                 (result) => {
-                    let person = new Person(result);
-                    if (person.found) {
-                        setTestButtonText(person.rank + ' ' + person.last + ', ' + person.first + ': Room ' + person.room);
-                    }
-                    else {
-                        setTestButtonText('ID: ' + person.id + ' not found');
-                    }
-
+                    setResultPerson(new Person(result));
+                    setResultOpen(true);
                  },
-                (error) => { setTestButtonText('Error: ' + error); }
+                (error) => { console.log("error: " + error); }
             )
 
             keyBuffer = [];
@@ -120,7 +140,7 @@ export function IDScannerPage() {
                     <br /> <br />
                     {ReadyIndicator(readyToScan, setReadyToScan)}
                     <br /> <br /> <br />
-                    {TestButton(testButtonText)}
+                    {ResultPopup(resultProps)}
                 </Column>
             </Row>
         </FlexGrid>
