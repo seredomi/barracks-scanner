@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { DataTable, TableContainer, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, } from '@carbon/react';
+import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarAction, TableToolbarSearch, TableToolbarMenu, Button, Table, TableHead, TableRow, TableHeader, TableBody, TableCell, } from '@carbon/react';
+import { AddLarge } from '@carbon/icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { queryAll } from '../../store';
 import { AppDispatch } from '../../store';
@@ -15,56 +16,67 @@ const headers = [
     { key: 'group', header: 'Group' },
 ]
 
-const PersonnelTable = (rows: Row[], headers: Header[], tableProps: {}, headerProps: {}, rowProps: {}) => {
+const PersonnelTable = (rows: Row[], headers: Header[], onSearchChange: any) => {
 
     return (
-        <Table >
-            <TableHead>
-                <TableRow>
-                    {headers.map((header) => (
-                        <TableHeader >
-                            {header.header}
-                        </TableHeader>
-                    ))}
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {rows.map((row) => (
-                    <TableRow >
-                        <TableCell key={row.id}> {row.rank} </TableCell>
-                        <TableCell key={row.id}> {row.last} </TableCell>
-                        <TableCell key={row.id}> {row.first} </TableCell>
-                        <TableCell key={row.id}> {row.group} </TableCell>
+        <TableContainer>
+            <TableToolbar>
+                <TableToolbarContent>
+                    <TableToolbarSearch onChange = {onSearchChange} />
+                    <Button onClick={() => console.log("Add button clicked")}>
+                        <div style={{display:'flex'}}>
+                            <AddLarge size='25' className='buttonIcon' /> <p>New</p>
+                        </div>
+                    </Button>
+                </TableToolbarContent>
+            </TableToolbar>
+            <Table >
+                <TableHead>
+                    <TableRow>
+                        {headers.map((header) => (
+                            <TableHeader >
+                                {header.header}
+                            </TableHeader>
+                        ))}
                     </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                </TableHead>
+                <TableBody>
+                    {rows.map((row) => (
+                        <TableRow >
+                            <TableCell key={row.id}> {row.rank} </TableCell>
+                            <TableCell key={row.id}> {row.last} </TableCell>
+                            <TableCell key={row.id}> {row.first} </TableCell>
+                            <TableCell key={row.id}> {row.group} </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }
 
 
 export function PersonnelPage() {
 
-    console.log("PersonnelPage")
-    const dispatch = useDispatch<AppDispatch>();
-    console.log("dispatch", dispatch);
+    const [search, setSearch] = useState('');
 
+    const onSearchChange = (e) => {
+        setSearch(e.target.value);
+        console.log(e.target.value);
+    }
+    const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
-        dispatch(queryAll());
-    }, []);
-    console.log("useEffect");
+        dispatch(queryAll(search));
+    }, [search]);
+
 
     const rows = useSelector((state: any) => state.personnel.personnelData);
-    console.log("rows", rows);
-    const [tableProps, setTableProps] = useState({});
-    const [headerProps, setHeaderProps] = useState({});
-    const [rowProps, setRowProps] = useState({});
 
     return (
         <div>
             <h2>Personnel</h2>
-            <br/> <br/>
-            {PersonnelTable(rows, headers, tableProps, headerProps, rowProps)}
+            <br/>
+            {PersonnelTable(rows, headers, onSearchChange)}
         </div>
     )
 }

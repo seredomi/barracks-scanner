@@ -16,8 +16,10 @@ const emptyPersonnel: PersonRow[] = [];
 
 export const queryAll = createAsyncThunk(
     'personnel/fetchAll',
-    async () => {
-        const rows: PersonRow[] = await invoke('query_all')
+    async (search: String) => {
+        console.log('searching: ' + search)
+        const rows: PersonRow[] = await invoke('query_all', { search: search })
+        console.log('rows: ' + rows)
         return rows
     },
 )

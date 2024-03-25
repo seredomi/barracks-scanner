@@ -45,9 +45,11 @@ pub fn check_id(db: &Connection, id: String) -> Person {
 }
 
 
-pub fn query_all(db: &Connection) -> Vec<Person> {
-    println!("Querying all personnel ");
-    let query = "SELECT * FROM personnel".to_string() + "";
+pub fn query_all(db: &Connection, search: String) -> Vec<Person> {
+    let query = "SELECT * FROM personnel WHERE (id like '%".to_string() + &search
+                        + "%' OR firstName like '%" + &search + "%' OR lastName like '%" + &search +
+                        "%') ORDER BY lastName, firstName";
+    print!("Query: {}", query);
     let personnel = query_to_personnel(&db, &query);
     match personnel {
         Ok(personnel) => return personnel,

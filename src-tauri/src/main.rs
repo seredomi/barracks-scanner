@@ -14,8 +14,8 @@ async fn check_id(app_handle: AppHandle, id: String) -> person::Person {
 }
 
 #[tauri::command]
-async fn query_all(app_handle: AppHandle) -> Vec<person::Person> {
-    return app_handle.db(|db: &rusqlite::Connection| database::query_all(db));
+async fn query_all(app_handle: AppHandle, search: String) -> Vec<person::Person> {
+    return app_handle.db(|db: &rusqlite::Connection| database::query_all(db, search));
 }
 
 fn main() {
