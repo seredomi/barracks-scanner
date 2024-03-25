@@ -2,6 +2,10 @@
 @use '@carbon/react/scss/theme' with ($theme: themes.$g10);
 @use '@carbon/react';
 
+html {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 
 .globalHeader {
   -webkit-app-region: drag;
