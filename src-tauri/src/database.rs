@@ -1,9 +1,8 @@
 use crate::person::Person;
 use rusqlite::Connection;
-use chrono::Local;
 
 pub fn connect(filename: String) -> Result<Connection, rusqlite::Error> {
-    let mut db = Connection::open(filename)?;
+    let db = Connection::open(filename)?;
     Ok(db)
 }
 
@@ -28,9 +27,9 @@ fn query_to_personnel(conn: &Connection, query: &str) -> Result<Vec<Person>, rus
     }
 }
 
-// TODO: update to return a Person if found, empty Person if not
-pub fn search_for_id(db: &Connection, id: String) -> Person {
+pub fn check_id(db: &Connection, id: String) -> Person {
 
+    println!("Checking id: {}", id);
     let query: String = "SELECT * FROM personnel WHERE id = '".to_string() + &id + "'";
     let personnel = query_to_personnel(&db, &query);
     match personnel {
@@ -39,8 +38,22 @@ pub fn search_for_id(db: &Connection, id: String) -> Person {
             _ => return personnel[0].clone(),
         },
         Err(_) => {
-            println!("Error in search_for_id");
+            println!("Error in check_id");
             return Person::new_unknown(id)
+        }
+    }
+}
+
+
+pub fn query_all(db: &Connection) -> Vec<Person> {
+    println!("Querying all personnel ");
+    let query = "SELECT * FROM personnel".to_string() + "";
+    let personnel = query_to_personnel(&db, &query);
+    match personnel {
+        Ok(personnel) => return personnel,
+        Err(_) => {
+            println!("Error in query_all ");
+            return Vec::new()
         }
     }
 }

@@ -10,8 +10,12 @@ use tauri::{State, Manager, AppHandle};
 
 #[tauri::command]
 async fn check_id(app_handle: AppHandle, id: String) -> person::Person {
-    println!("Checking ID: {}", id);
-    return app_handle.db(|db: &rusqlite::Connection| database::search_for_id(db, id));
+    return app_handle.db(|db: &rusqlite::Connection| database::check_id(db, id));
+}
+
+#[tauri::command]
+async fn query_all(app_handle: AppHandle) -> Vec<person::Person> {
+    return app_handle.db(|db: &rusqlite::Connection| database::query_all(db));
 }
 
 fn main() {
@@ -19,7 +23,7 @@ fn main() {
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![ check_id])
+        .invoke_handler(tauri::generate_handler![check_id, query_all])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();

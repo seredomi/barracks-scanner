@@ -16,9 +16,18 @@ pub struct Person {
 }
 
 impl Person {
-    pub fn new_known(id: String, rank: String, last: String, first: String, room: String, group: String, leave_date: String) -> Person {
-        let leave_date: NaiveDate = NaiveDate::parse_from_str(&leave_date, date_format::FORMAT).unwrap();
-        Person { id, rank, last, first, room, group, leave_date, found: true, }
+    pub fn new_known(id: String, rank: String, last: String, first: String, room: String, group: String, rec_leave_date: String) -> Person {
+        let leave_date = NaiveDate::parse_from_str(&rec_leave_date, date_format::FORMAT);
+        match leave_date {
+            Ok(leave_date) => Person { id, rank, last, first, room, group, leave_date, found: true, },
+            Err(_) => {
+                println!("Error parsing leave date: {}", rec_leave_date);
+                let p: Person = Person { id, rank, last, first, room, group, leave_date: NaiveDate::from_ymd_opt(9999, 1, 1).unwrap(), found: true, };
+                p.print();
+                println!("---------------");
+                return p;
+            },
+        }
     }
 
     pub fn new_unknown(id: String) -> Person {
