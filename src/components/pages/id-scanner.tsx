@@ -23,19 +23,15 @@ function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
 
     if (readyToScan) {
         return (
-            <Button kind='tertiary' disabled>
-                <div style={{display:'flex'}}>
-                    <Checkmark size='25' className='buttonIcon' /> <p>Scan back of ID when ready</p>
-                </div>
+            <Button renderIcon={Checkmark} kind='tertiary' disabled>
+                    Scan back of ID when ready
             </Button>
         )
     }
     else {
         return (
-            <Button kind='danger' onClick={handleStatusClick}>
-                <div style={{display:'flex'}}>
-                    <WarningAlt size='25' className='buttonIcon' /> <p>Click here before scanning!</p>
-                </div>
+            <Button renderIcon={WarningAlt} kind='danger' >
+                    Click here before scanning!
             </Button>
         )
     }

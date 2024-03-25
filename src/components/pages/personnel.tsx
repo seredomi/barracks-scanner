@@ -16,6 +16,21 @@ const headers = [
     { key: 'group', header: 'Group' },
 ]
 
+const PersonnelTableHeaders = (headers: Header[], rows: Row[]) => {
+    if (rows.length === 0) { return null; }
+    return (
+        <TableHead>
+            <TableRow>
+                {headers.map((header) => (
+                    <TableHeader >
+                        {header.header}
+                    </TableHeader>
+                ))}
+            </TableRow>
+        </TableHead>
+    )
+}
+
 const PersonnelTable = (rows: Row[], headers: Header[], onSearchChange: any) => {
 
     return (
@@ -23,23 +38,13 @@ const PersonnelTable = (rows: Row[], headers: Header[], onSearchChange: any) => 
             <TableToolbar>
                 <TableToolbarContent>
                     <TableToolbarSearch onChange = {onSearchChange} />
-                    <Button onClick={() => console.log("Add button clicked")}>
-                        <div style={{display:'flex'}}>
-                            <AddLarge size='25' className='buttonIcon' /> <p>New</p>
-                        </div>
+                    <Button renderIcon={AddLarge} onClick={() => console.log("Add button clicked")}>
+                        New
                     </Button>
                 </TableToolbarContent>
             </TableToolbar>
             <Table >
-                <TableHead>
-                    <TableRow>
-                        {headers.map((header) => (
-                            <TableHeader >
-                                {header.header}
-                            </TableHeader>
-                        ))}
-                    </TableRow>
-                </TableHead>
+                {PersonnelTableHeaders(headers, rows)}
                 <TableBody>
                     {rows.map((row) => (
                         <TableRow >
