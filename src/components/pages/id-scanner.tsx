@@ -6,7 +6,7 @@ import { useState } from 'react';
 import Person from '../../classes/person';
 
 
-async function checkID(idArg: string)  {
+export async function checkID(idArg: string)  {
     let test: string = await invoke('check_id', { id: idArg });
     return test;
 }
@@ -44,8 +44,8 @@ const ResultPopup = (props: {open: boolean, setOpen: (a: boolean) => void, perso
     if (props.person.found) {
         resultProps = {
             kind: 'success',
-            title: 'Authorized',
-            subtitle: props.person.rank + ' ' + props.person.last + ', ' + props.person.first + '\n' +
+            title: 'Authorized\n',
+            subtitle: '\n' + props.person.rank + ' ' + props.person.last + ', ' + props.person.first + '\n' +
                 props.person.group + ' in ' + props.person.room + '\n',
            onActionButtonClick: () => props.setOpen(false),
             closeOnEscape: true,
