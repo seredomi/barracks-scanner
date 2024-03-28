@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { invoke } from '@tauri-apps/api/tauri';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
         Button, OverflowMenuItem, OverflowMenu, Modal, TextInput, Select, SelectItemGroup, SelectItem} from '@carbon/react';
@@ -18,19 +19,19 @@ const headers = [
 ]
 
 
-const PersonnelTable = (personnel: Person[], headers: Header[], onSearchChange: any, setSelectedPerson, setDetailsOpen) => {
+const PersonnelTable = (props: any) => {
 
     return (
-        <DataTable rows={personnel} headers={headers} >
+        <DataTable rows={props.personnel} headers={headers} >
             {({ rows, headers }) => 
 
             <TableContainer>
                 <TableToolbar>
                     <TableToolbarContent>
-                        <TableToolbarSearch onChange = {onSearchChange} />
+                        <TableToolbarSearch onChange = {props.onSearchChange} />
                         <Button renderIcon={AddLarge} onClick={() => {
-                            setDetailsOpen(true)
-                            setSelectedPerson(personnel[0])
+                            props.setSelectedPerson(emptyPerson)
+                            props.setDetailsOpen(true)
                             }}>
                             New
                         </Button>
@@ -56,9 +57,8 @@ const PersonnelTable = (personnel: Person[], headers: Header[], onSearchChange: 
                                 <OverflowMenu  size='sm' light flipped onClick={() => {
                                     checkID(row.id).then(
                                         (result) => {
-                                            setSelectedPerson(result);
-                                            console.log(result);
-                                            setDetailsOpen(true)
+                                            props.setSelectedPerson(result);
+                                            props.setDetailsOpen(true)
                                         },
                                         (error) => { console.log("error: " + error); }
             )
@@ -74,26 +74,67 @@ const PersonnelTable = (personnel: Person[], headers: Header[], onSearchChange: 
 }
 
 
-const PersonDetails = (person: any, detailsOpen: boolean, setDetailsOpen: (arg0: boolean) => void) => {
+const PersonDetails = (props: any) => {
     const [ editMode, setEditMode ] = useState(false);
+
+    // maintain separate state for edits, but still update when new person selected
+    const [ editID, setEditID ] = useState("");
+    const [ editRank, setEditRank ] = useState("");
+    const [ editLast, setEditLast ] = useState("");
+    const [ editFirst, setEditFirst ] = useState("");
+    const [ editGroup, setEditGroup ] = useState("");
+    const [ editRoom, setEditRoom ] = useState("");
+    const [ editLeaveDate, setEditLeaveDate ] = useState("");
+
+    useEffect(() => {
+        setEditID(props.person.id);
+        setEditRank(props.person.rank);
+        setEditLast(props.person.last);
+        setEditFirst(props.person.first);
+        setEditGroup(props.person.group);
+        setEditRoom(props.person.room);
+        setEditLeaveDate(props.person.leave_date);
+    } , [props.person])
 
     return (
         <Modal
-            open={detailsOpen}
+            open={props.detailsOpen}
             onRequestClose={() => {
-                setDetailsOpen(false)
-                setEditMode(false)
+                props.setDetailsOpen(false)
+                props.setEditMode(false)
             }}
             modalHeading={ (editMode ? "Edit" : "View" ) + " details"}
-            secondaryButtonText="Cancel"
+            secondaryButtonText={ editMode ? "Cancel" : "Close"}
             primaryButtonText={ editMode ? "Save" : "Edit"}
-        >
+            onRequestSubmit={ () => {
+                if (!editMode) {
+                    setEditMode(true);
+                }
+                else {
+                    invoke('update_person', {oldId: props.person.id, newInfo: {
+                        id: editID,
+                        rank: editRank,
+                        last: editLast,
+                        first: editFirst,
+                        group: editGroup,
+                        room: editRoom,
+                        leave_date: editLeaveDate,
+                        found: true
+
+                    }})
+                    setEditMode(false);
+                    props.refresh();
+                }
+
+            } } >
+
             <TextInput
                 id='id-input'
                 labelText="ID (Scan back of ID)"
                 disabled={!editMode}
-                value={person.id}
+                value={editID}
                 style={{marginBottom: '1rem'}}
+                onChange={(e) => setEditID(e.target.value)}
             />
 
             <div id='rank-name=input' className='formGroup' style={{marginBottom:'1rem'}}>
@@ -101,7 +142,8 @@ const PersonDetails = (person: any, detailsOpen: boolean, setDetailsOpen: (arg0:
                     id='rank-select'
                     labelText="Rank"
                     disabled={!editMode}
-                    value={person.rank}
+                    value={editRank}
+                    onChange={(e) => setEditRank(e.target.value)}
                 >
                     <SelectItemGroup label="Enlisted">
                         <SelectItem value="PVT" text="PVT" />
@@ -146,13 +188,15 @@ const PersonDetails = (person: any, detailsOpen: boolean, setDetailsOpen: (arg0:
                     id='last-name-input'
                     labelText="Last name"
                     disabled={!editMode}
-                    value={person.last}
+                    value={editLast}
+                    onChange={(e) => setEditLast(e.target.value)}
                 />
                 <TextInput
                     id='first-name-input'
                     labelText="First name"
                     disabled={!editMode}
-                    value={person.first}
+                    value={editFirst}
+                    onChange={(e) => setEditFirst(e.target.value)}
                 />
             </div>
 
@@ -161,19 +205,22 @@ const PersonDetails = (person: any, detailsOpen: boolean, setDetailsOpen: (arg0:
                     id='group-input'
                     labelText="Group"
                     disabled={!editMode}
-                    value={person.group}
+                    value={editGroup}
+                    onChange={(e) => setEditGroup(e.target.value)}
                 />
                 <TextInput
                     id='room-input'
                     labelText="Room"
                     disabled={!editMode}
-                    value={person.room}
+                    value={editRoom}
+                    onChange={(e) => setEditRoom(e.target.value)}
                 />
                 <TextInput
                     id='leave-date-input'
                     labelText="Leave Date"
                     disabled={!editMode}
-                    value={person.leave_date}
+                    value={editLeaveDate}
+                    onChange={(e) => setEditLeaveDate(e.target.value)}
                 />
             </div>
 
@@ -190,23 +237,43 @@ export function PersonnelPage() {
         setSearch(e.target.value);
         console.log(e.target.value);
     }
+
+    const refresh = () => {
+        dispatch(queryAll(search));
+    }
+
     const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
-        dispatch(queryAll(search));
+        refresh();
     }, [search]);
-
 
     const personnel = useSelector((state: any) => state.personnel.personnelData);
 
     const [ detailsOpen, setDetailsOpen ] = useState(false);
     const [ selectedPerson, setSelectedPerson ] = useState(emptyPerson);
 
+    const detailsProps = {
+        person: selectedPerson,
+        detailsOpen: detailsOpen,
+        setDetailsOpen: setDetailsOpen,
+        reresh: refresh
+    }
+
+    const tableProps = {
+        personnel: personnel,
+        headers: headers,
+        onSearchChange: onSearchChange,
+        setSelectedPerson: setSelectedPerson,
+        setDetailsOpen: setDetailsOpen
+    }
+
+
     return (
         <div>
             <h2>Personnel</h2>
             <br/>
-            {PersonDetails(selectedPerson, detailsOpen, setDetailsOpen)}
-            {PersonnelTable(personnel, headers, onSearchChange, setSelectedPerson, setDetailsOpen )}
+            {PersonDetails(detailsProps)}
+            {PersonnelTable(tableProps)}
         </div>
     )
 }
