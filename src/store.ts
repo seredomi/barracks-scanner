@@ -11,32 +11,46 @@ const pageSlice = createSlice({
     },
 });
 
-type PersonRow = {id: string, rank: string, last: string, first: string, group: string};
-const emptyPersonnel: PersonRow[] = [];
+export type Person = {
+    id: string, 
+    rank: string, 
+    last: string, 
+    first: string, 
+    group: string,
+    leaveDate: string,
+    found: boolean,
+};
+export const emptyPerson: Person = {
+    id: "null",
+    rank: "",
+    last: "",
+    first: "",
+    group: "",
+    leaveDate: "",
+    found: false,
+}
 
 export const queryAll = createAsyncThunk(
     'personnel/fetchAll',
     async (search: String) => {
-        console.log('searching: ' + search)
-        const rows: PersonRow[] = await invoke('query_all', { search: search })
-        console.log('rows: ' + rows)
-        return rows
+        const rows: Person[] = await invoke('query_all', { search: search })
+        return rows;
     },
 )
 
 const personnelSlice = createSlice({
     name: 'personnel',
-    initialState: {personnelData: emptyPersonnel},
+    initialState: {personnelData: []},
     reducers: { },
     extraReducers: (builder) => {
         builder.addCase(queryAll.fulfilled, (state, action) => {
             state.personnelData = action.payload
         }),
         builder.addCase(queryAll.pending, (state) => {
-            state.personnelData = emptyPersonnel
+            state.personnelData = []
         }),
         builder.addCase(queryAll.rejected, (state) => {
-            state.personnelData = emptyPersonnel
+            state.personnelData = []
         })
     }
 });
