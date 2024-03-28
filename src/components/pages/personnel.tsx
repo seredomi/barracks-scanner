@@ -99,13 +99,13 @@ const PersonDetails = (props: any) => {
     return (
         <Modal
             open={props.detailsOpen}
-            onRequestClose={() => {
-                props.setDetailsOpen(false)
-                props.setEditMode(false)
-            }}
             modalHeading={ (editMode ? "Edit" : "View" ) + " details"}
             secondaryButtonText={ editMode ? "Cancel" : "Close"}
             primaryButtonText={ editMode ? "Save" : "Edit"}
+            onRequestClose={() => {
+                props.setDetailsOpen(false)
+                setEditMode(false)
+            }}
             onRequestSubmit={ () => {
                 if (!editMode) {
                     setEditMode(true);
@@ -256,7 +256,9 @@ export function PersonnelPage() {
         person: selectedPerson,
         detailsOpen: detailsOpen,
         setDetailsOpen: setDetailsOpen,
-        reresh: refresh
+        search: search,
+        setSearch: setSearch,
+        refresh: refresh
     }
 
     const tableProps = {
