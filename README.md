@@ -36,13 +36,15 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] query database
 - [x] return results
   - [x] serialize Person
-  - [ ] format results
+  - [ ] format results better (diff component needed?)
   - [ ] button to add if not found?
 ### personnel
 - [x] display all
 - [x] search
 - [ ] create
-- [ ] edit
+- [x] edit
+  - [ ] input validation
+  - [ ] date
 - [ ] delete
 - [ ] sort?
 - [ ] filter?
