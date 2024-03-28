@@ -18,3 +18,9 @@ html {
 .buttonIcon {
   padding-right: 10px;
 }
+
+.formGroup {
+  display: flex;
+  column-gap: 10px;
+  justify-content: space-between;
+}
