@@ -40,10 +40,12 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [ ] button to add if not found?
 ### personnel
 - [x] display all
-- [ ] filter / search
+- [x] search
 - [ ] create
 - [ ] edit
 - [ ] delete
+- [ ] sort?
+- [ ] filter?
 ### scan history
 ### settings
 ## other notes
