@@ -59,3 +59,13 @@ pub fn query_all(db: &Connection, search: String) -> Vec<Person> {
         }
     }
 }
+
+pub fn update_person(db: &Connection, old_id: String, new_info: Person) -> () {
+    let query = 
+        "UPDATE personnel SET id = '".to_string() + &new_info.get_id()
+        + "', rank = '" + &new_info.get_rank() + "', lastName = '" + &new_info.get_last()
+        + "', firstName = '" + &new_info.get_first() + "', room = '" + &new_info.get_room()
+        + "', groupName = '" + &new_info.get_group() + "', leaveDate = '" + &new_info.get_leave_date_string()
+        + "' WHERE id = '" + &old_id + "'";
+    let _ = db.execute(&query, []);
+}

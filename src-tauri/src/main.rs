@@ -18,12 +18,17 @@ async fn query_all(app_handle: AppHandle, search: String) -> Vec<person::Person>
     return app_handle.db(|db: &rusqlite::Connection| database::query_all(db, search));
 }
 
+#[tauri::command]
+async fn update_person(app_handle: AppHandle, old_id: String, new_info: person::Person) -> () {
+    return app_handle.db(|db: &rusqlite::Connection| database::update_person(db, old_id, new_info));
+}
+
 fn main() {
 
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, query_all])
+        .invoke_handler(tauri::generate_handler![check_id, query_all, update_person])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();
