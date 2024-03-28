@@ -201,13 +201,20 @@ const PersonDetails = (props: any) => {
             </div>
 
             <div id='room-group-date-input' className='formGroup'>
-                <TextInput
-                    id='group-input'
+                <Select
+                    id='group-select'
                     labelText="Group"
                     disabled={!editMode}
                     value={editGroup}
                     onChange={(e) => setEditGroup(e.target.value)}
-                />
+                >
+                    <SelectItem value="Resident" text="Resident" />
+                    <SelectItem value="Rotational Unit" text="Rotational Unit" />
+                    <SelectItem value="COC" text="COC" />
+                    <SelectItem value="Guest" text="Guest" />
+                    <SelectItem value="Hotel Divarty" text="Hotel Divarty" />
+
+                </Select>
                 <TextInput
                     id='room-input'
                     labelText="Room"
