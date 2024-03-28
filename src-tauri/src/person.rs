@@ -43,6 +43,7 @@ impl Person {
     pub fn get_room(&self) -> &String { &self.room }
     pub fn get_group(&self) -> &String { &self.group }
     pub fn get_leave_date(&self) -> &NaiveDate { &self.leave_date }
+    pub fn get_leave_date_string(&self) -> String { format!("{}", self.leave_date.format(date_format::FORMAT)) }
 
     pub fn get_full_name(&self) -> String {
         self.rank.clone() + " " + &self.first + ", " + &self.last
