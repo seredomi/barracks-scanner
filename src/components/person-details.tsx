@@ -50,13 +50,14 @@ const PersonDetails = (props: any) => {
     async function validateID() {
         let errorMsg: string = "";
         if (editID.length > 30) { errorMsg = "ID must be less than 40 characters"; }
-        if (editID.includes(';')) { errorMsg = "ID must not contain ; "; }
+        else if (editID.includes(';')) { errorMsg = "ID must not contain ; "; }
         // ensure ID is unique for new entries
-        if (errorMsg === "" && props.detailsMode === 'new') {
+        else if (props.detailsMode === 'new') {
             await invoke ('check_id', {id: editID}).then(
                 (result) => {
                     const p: Person = new Person(result);
-                    if (p.found) { errorMsg = "ID already exists"; }
+                    if (p.found) { errorMsg = "ID already exists"; setAllValid(false);}
+                    else { setAllValid(true); }
                 },
                 (error) => { console.log("Error checking for duplicate ID: " + error); }
             )
