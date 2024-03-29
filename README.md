@@ -40,6 +40,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [ ] button to add if not found?
 ### personnel
 - [x] display all
+  - [ ] fix issue with persistent details button highlights
 - [x] search
 - [ ] create
 - [x] edit
