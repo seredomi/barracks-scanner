@@ -20,7 +20,7 @@ export type Person = {
     room: string,
     leave_date: string,
     found: boolean,
-};
+} | {};
 export const emptyPerson: Person = {
     id: "",
     rank: "",
