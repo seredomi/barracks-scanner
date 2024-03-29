@@ -5,7 +5,6 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { useState } from 'react';
 import Person from '../../classes/person';
 
-
 export async function checkID(idArg: string)  {
     let test: string = await invoke('check_id', { id: idArg });
     return test;
@@ -18,8 +17,7 @@ async function handleFocusChange(setReadyToScan: (a: boolean) => void ) {
     })
 }
 
-function ReadyIndicator(readyToScan: boolean, setReadyToScan: any) {
-    const handleStatusClick = () => { setReadyToScan(true); }
+function ReadyIndicator(readyToScan: boolean) {
 
     if (readyToScan) {
         return (
@@ -66,9 +64,7 @@ const ResultPopup = (props: {open: boolean, setOpen: (a: boolean) => void, perso
         }
     }
 
-    return (
-        <ActionableNotification {...resultProps} />
-    )
+    return ( <ActionableNotification {...resultProps} />)
 }
 
 export function IDScannerPage() {
@@ -133,7 +129,7 @@ export function IDScannerPage() {
                 <Column>
                     <h2>ID Scanner</h2>
                     <br /> <br />
-                    {ReadyIndicator(readyToScan, setReadyToScan)}
+                    {ReadyIndicator(readyToScan)}
                     <br /> <br /> <br />
                     {ResultPopup(resultProps)}
                 </Column>
