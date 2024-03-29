@@ -17,16 +17,18 @@ export type Person = {
     last: string, 
     first: string, 
     group: string,
-    leaveDate: string,
+    room: string,
+    leave_date: string,
     found: boolean,
 };
 export const emptyPerson: Person = {
-    id: "null",
+    id: "",
     rank: "",
     last: "",
     first: "",
     group: "",
-    leaveDate: "",
+    room: "",
+    leave_date: "",
     found: false,
 }
 
