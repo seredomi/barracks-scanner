@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem } from '@carbon/react';
 import { invoke } from '@tauri-apps/api/tauri';
-
+import { emptyPerson } from '../store';
+import Person from '../classes/person';
 
 const PersonDetails = (props: any) => {
 
@@ -14,6 +15,17 @@ const PersonDetails = (props: any) => {
     const [ editRoom, setEditRoom ] = useState("");
     const [ editLeaveDate, setEditLeaveDate ] = useState("");
 
+    const [ errorID, setErrorID ] = useState("");
+    const [ errorRank, setErrorRank ] = useState("");
+    const [ errorLast, setErrorLast ] = useState("");
+    const [ errorFirst, setErrorFirst ] = useState("");
+    const [ errorGroup, setErrorGroup ] = useState("");
+    const [ errorRoom, setErrorRoom ] = useState("");
+    const [ errorLeaveDate, setErrorLeaveDate ] = useState("");
+
+    const [ anyEmpty, setAnyEmpty ] = useState(false);
+    const [ allValid, setAllValid ] = useState(false);
+
     useEffect(() => {
         setEditID(props.person.id);
         setEditRank(props.person.rank);
@@ -24,12 +36,96 @@ const PersonDetails = (props: any) => {
         setEditLeaveDate(props.person.leave_date);
     } , [props.person])
 
+    useEffect(() => {validateID();}, [editID])
+    useEffect(() => {validateRank();}, [editRank])
+    useEffect(() => {validateLast();}, [editLast])
+    useEffect(() => {validateFirst();}, [editFirst])
+    useEffect(() => {validateGroup();}, [editGroup])
+    useEffect(() => {validateRoom();}, [editRoom])
+    useEffect(() => {validateLeaveDate();}, [editLeaveDate])
+
+    useEffect(() => { validateAll(); }, [editID, editRank, editLast, editFirst, editGroup, editRoom, editLeaveDate])
+
+
+    async function validateID() {
+        let errorMsg: string = "";
+        if (editID.length > 30) { errorMsg = "ID must be less than 40 characters"; }
+        if (editID.includes(';')) { errorMsg = "ID must not contain ; "; }
+        // ensure ID is unique for new entries
+        if (errorMsg === "" && props.detailsMode === 'new') {
+            await invoke ('check_id', {id: editID}).then(
+                (result) => {
+                    const p: Person = new Person(result);
+                    if (p.found) { errorMsg = "ID already exists"; }
+                },
+                (error) => { console.log("Error checking for duplicate ID: " + error); }
+            )
+        }
+        setErrorID(errorMsg);
+    }
+
+    function validateRank() {
+        let errorMsg: string = "";
+        setErrorRank(errorMsg);
+    }
+
+    function validateLast() {
+        let errorMsg: string = "";
+        if (editLast.length > 40) { errorMsg = "Last name must be less than 30 characters"; }
+        setErrorLast(errorMsg);
+    }
+
+    function validateFirst() {
+        let errorMsg: string = "";
+        if (editFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
+        setErrorFirst(errorMsg);
+    }
+
+    function validateGroup() {
+        let errorMsg: string = "";
+        setErrorGroup(errorMsg);
+    }
+
+    function validateRoom() {
+        let errorMsg: string = "";
+        if (editRoom.length > 30) { errorMsg = "Room must be less than 30 characters"; }
+        setErrorRoom(errorMsg);
+    }
+
+    function validateLeaveDate() {
+        let errorMsg: string = "";
+        if (editLeaveDate.length > 30) { errorMsg = "Leave date must be less than 30 characters"; }
+        setErrorLeaveDate(errorMsg);
+    }
+
+    function validateAll() {
+        console.log("validating all");
+        if (editID.length < 1 || editRank.length < 1 || editLast.length < 1 || editFirst.length < 1 || editGroup.length < 1 || editRoom.length < 1 || editLeaveDate.length < 1) {
+            setAllValid(false);
+            setAnyEmpty(true);
+            return;
+        }
+        setAnyEmpty(false);
+
+        if (errorID.length > 0 || errorLast.length > 0 || errorFirst.length > 0 || errorRoom.length > 0 || errorLeaveDate.length > 0) {
+            setAllValid(false);
+            return;
+        }
+        setAllValid(true);
+    }
+
+
+    function DetailsModal() {
+
+    }
+
     return (
         <Modal
             open={props.detailsOpen}
             modalHeading={ props.detailsMode === 'view' ? "View details" : props.detailsMode === 'edit' ? "Edit details" : "New entry" }
             secondaryButtonText={ props.detailsMode === 'view' ? "Close" : "Cancel" }
             primaryButtonText={ props.detailsMode === 'view' ? "Edit": "Save" }
+            primaryButtonDisabled={props.detailsMode === 'view' ? false : !allValid}
             onRequestClose={() => {
                 props.setDetailsOpen(false)
                 props.setDetailsMode('view')
@@ -61,23 +157,29 @@ const PersonDetails = (props: any) => {
                     props.setDetailsMode('view');
                 }
             } } >
+            
+            <div id='error-message' className='formRow' margin-top='3rem'>
+                <TextInput
+                    id='id-input'
+                    labelText="ID (Scan back of ID)"
+                    disabled={props.detailsMode === 'new' ? false : true}
+                    value={editID}
+                    onChange={(e) => setEditID(e.target.value)}
+                    onBlur={() => validateID()}
+                    invalid={errorID.length > 0}
+                    invalidText={errorID}
+                />
+            </div>
 
-            <TextInput
-                id='id-input'
-                labelText="ID (Scan back of ID)"
-                disabled={props.detailsMode === 'view'}
-                value={editID}
-                style={{marginBottom: '1rem'}}
-                onChange={(e) => setEditID(e.target.value)}
-            />
-
-            <div id='rank-name=input' className='formGroup' style={{marginBottom:'1rem'}}>
+            <div id='rank-name=input' className='formRow' >
                 <Select
                     id='rank-select'
                     labelText="Rank"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editRank}
                     onChange={(e) => setEditRank(e.target.value)}
+                    invalid={errorRank.length > 0}
+                    invalidText={errorRank}
                 >
                     <SelectItem value="" text="" />
                     <SelectItemGroup label="Enlisted">
@@ -122,26 +224,32 @@ const PersonDetails = (props: any) => {
                 <TextInput
                     id='last-name-input'
                     labelText="Last name"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editLast}
                     onChange={(e) => setEditLast(e.target.value)}
+                    invalid={errorLast.length > 0}
+                    invalidText={errorLast}
                 />
                 <TextInput
                     id='first-name-input'
                     labelText="First name"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editFirst}
                     onChange={(e) => setEditFirst(e.target.value)}
+                    invalid={errorFirst.length > 0}
+                    invalidText={errorFirst}
                 />
             </div>
 
-            <div id='room-group-date-input' className='formGroup'>
+            <div id='room-group-date-input' className='formRow'>
                 <Select
                     id='group-select'
                     labelText="Group"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editGroup}
                     onChange={(e) => setEditGroup(e.target.value)}
+                    invalid={errorGroup.length > 0}
+                    invalidText={errorGroup}
                 >
                     <SelectItem value="" text="" />
                     <SelectItem value="Resident" text="Resident" />
@@ -154,18 +262,24 @@ const PersonDetails = (props: any) => {
                 <TextInput
                     id='room-input'
                     labelText="Room"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editRoom}
                     onChange={(e) => setEditRoom(e.target.value)}
+                    invalid={errorRoom.length > 0}
+                    invalidText={errorRoom}
                 />
                 <TextInput
                     id='leave-date-input'
                     labelText="Leave Date"
-                    disabled={props.detailsMode === 'view'}
+                    readOnly={props.detailsMode === 'view'}
                     value={editLeaveDate}
                     onChange={(e) => setEditLeaveDate(e.target.value)}
+                    invalid={errorLeaveDate.length > 0}
+                    invalidText={errorLeaveDate}
                 />
             </div>
+
+            <br /> <p>{anyEmpty ? "All fields are required" : ""}</p>
 
         </Modal>
     )
