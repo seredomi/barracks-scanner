@@ -35,17 +35,17 @@ impl Person {
         Person { id, rank: "".to_string(), last: "".to_string(), first: "".to_string(), room: "".to_string(), group: "".to_string(), leave_date, found: false, }
     }
 
-    pub fn is_found(&self) -> bool { self.found }
+    pub fn _is_found(&self) -> bool { self.found }
     pub fn get_id(&self) -> &String { &self.id }
     pub fn get_rank(&self) -> &String { &self.rank }
     pub fn get_last(&self) -> &String { &self.last }
     pub fn get_first(&self) -> &String { &self.first }
     pub fn get_room(&self) -> &String { &self.room }
     pub fn get_group(&self) -> &String { &self.group }
-    pub fn get_leave_date(&self) -> &NaiveDate { &self.leave_date }
+    pub fn _get_leave_date(&self) -> &NaiveDate { &self.leave_date }
     pub fn get_leave_date_string(&self) -> String { format!("{}", self.leave_date.format(date_format::FORMAT)) }
 
-    pub fn get_full_name(&self) -> String {
+    pub fn _get_full_name(&self) -> String {
         self.rank.clone() + " " + &self.first + ", " + &self.last
     }
 
