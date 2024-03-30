@@ -26,9 +26,7 @@ const PersonnelTable = (props: any) => {
                     <TableToolbarContent>
                         <TableToolbarSearch onChange = {props.onSearchChange} />
                         <Button renderIcon={AddLarge} onClick={() => {
-                            console.log("selected before: "); console.log(props.selectedPerson);
-                            props.setSelectedPerson(emptyPerson)
-                            console.log("selected after: "); console.log(props.selectedPerson);
+                            console.log(props.selectedPerson);
                             props.setDetailsMode('new')
                             props.setDetailsOpen(true)
                             }}>
