@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, TextInput, Select, SelectItemGroup, SelectItem } from '@carbon/react';
+import { Modal, TextInput, Select, SelectItemGroup, SelectItem, DatePicker, DatePickerInput } from '@carbon/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Person } from '../classes/person';
 
@@ -38,7 +38,8 @@ const PersonDetails = (props: any) => {
     useEffect (() => { validateLast(); }, [newLast]);
     useEffect (() => { validateFirst(); }, [newFirst]);
     useEffect (() => { validateRoom(); }, [newRoom]);
-    useEffect (() => { validateLeaveDate(); }, [newLeaveDate]);
+
+    useEffect (() => { console.log("leave date: " + newLeaveDate); }, [newLeaveDate]);
 
     useEffect(() => { validateAll(); }, [newID, newRank, newLast, newFirst, newGroup, newRoom, newLeaveDate,
                                         errorID, errorLast, errorFirst, errorRoom, errorLeaveDate])
@@ -80,14 +81,8 @@ const PersonDetails = (props: any) => {
         setErrorRoom(errorMsg);
     }
 
-    function validateLeaveDate() {
-        let errorMsg: string = "";
-        if (newLeaveDate.length > 10) { errorMsg = "Leave date must be less than 10 characters"; }
-        setErrorLeaveDate(errorMsg);
-    }
-
     function validateAll() {
-        if (newID.length < 1 || newRank.length < 1 || newLast.length < 1 || newFirst.length < 1 || newGroup.length < 1 || newRoom.length < 1 || newLeaveDate.length < 1) {
+        if (newID.length < 1 || newRank.length < 1 || newLast.length < 1 || newFirst.length < 1 || newGroup.length < 1 || newRoom.length < 1 ) {
             setAnyEmpty(true);
             setAllValid(false);
             return;
@@ -107,15 +102,23 @@ const PersonDetails = (props: any) => {
         setNewFirst(newFirst.replace(/\b\w/g, l => l.toUpperCase()));
         // caliptalize room number letter
         setNewRoom(newRoom.toUpperCase());
-        console.log("formalized: " + newLast + ", " + newFirst + ", " + newRoom);
     }
 
     function clearData() {
         setNewID(""); setNewRank(""); setNewLast(""); setNewFirst("");
-        setNewGroup(""); setNewRoom(""); setNewLeaveDate("");
+        setNewGroup(""); setNewRoom(""); setNewLeaveDate("0000-00-00");
 
         setErrorID(""); setErrorLast(""); setErrorFirst("");
         setErrorRoom(""); setErrorLeaveDate("");
+    }
+
+    function formatCalendarDate(date: string) {
+        // convert m/d/yyy to yyyy-mm-dd
+        let parts: string[] = date.split('/');
+        const month: string = parts[0].length === 1 ? '0' + parts[0] : parts[0];
+        const day: string = parts[1].length === 1 ? '0' + parts[1] : parts[1];
+        const year: string = parts[2].slice(0, 4);
+        return year + '-' + month + '-' + day;
     }
 
     return (
@@ -168,7 +171,7 @@ const PersonDetails = (props: any) => {
             <div id='error-message' className='formRow' >
                 <TextInput
                     id='id-input'
-                    labelText="ID (Scan back of ID)"
+                    labelText="ID"
                     disabled={props.detailsMode === 'new' ? false : true}
                     value={newID}
                     onChange={(e) => setNewID(e.target.value)}
@@ -176,6 +179,7 @@ const PersonDetails = (props: any) => {
                     invalid={errorID.length > 0}
                     invalidText={errorID}
                     helperText="&nbsp;"
+                    placeholder='Scan back of ID'
                 />
             </div>
 
@@ -276,17 +280,23 @@ const PersonDetails = (props: any) => {
                     invalid={errorRoom.length > 0}
                     invalidText={errorRoom}
                     helperText="&nbsp;"
+                    placeholder='e.g. 123A'
                 />
-                <TextInput
-                    id='leave-date-input'
-                    labelText="Leave date"
-                    readOnly={props.detailsMode === 'view'}
+                <DatePicker 
+                    datePickerType='single' 
+                    minDate={Date.now()}
                     value={newLeaveDate}
-                    onChange={(e) => setNewLeaveDate(e.target.value)}
-                    invalid={errorLeaveDate.length > 0}
-                    invalidText={errorLeaveDate}
-                    helperText="&nbsp;"
-                />
+                    dateFormat='Y-m-d'
+                    short={true}
+                    onChange={(e) => { setNewLeaveDate(formatCalendarDate(e.toLocaleString()))}}
+                    >
+                    <DatePickerInput
+                        id='leave-date-input'
+                        labelText="Leave date"
+                        readOnly={props.detailsMode === 'view'}
+                        placeholder='YYYY-MM-DD'
+                    />
+                </DatePicker>
             </div>
 
             <p style={{color: 'red'}}>{ props.detailsMode !== 'view' && anyEmpty ? "All fields are required" : "  " }</p>
