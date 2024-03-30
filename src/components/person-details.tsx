@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem } from '@carbon/react';
 import { invoke } from '@tauri-apps/api/tauri';
-import { Person, emptyPerson } from '../classes/person';
+import { Person } from '../classes/person';
 
 const PersonDetails = (props: any) => {
 
@@ -64,13 +64,13 @@ const PersonDetails = (props: any) => {
 
     function validateLast() {
         let errorMsg: string = "";
-        if (newLast.length > 20) { errorMsg = "Last name must be less than 20 characters"; }
+        if (newLast.length > 30) { errorMsg = "Last name must be less than 30 characters"; }
         setErrorLast(errorMsg);
     }
 
     function validateFirst() {
         let errorMsg: string = "";
-        if (newFirst.length > 20) { errorMsg = "First name must be less than 20 characters"; }
+        if (newFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
         setErrorFirst(errorMsg);
     }
 
@@ -82,7 +82,7 @@ const PersonDetails = (props: any) => {
 
     function validateLeaveDate() {
         let errorMsg: string = "";
-        if (newLeaveDate.length > 20) { errorMsg = "Leave date must be less than 20 characters"; }
+        if (newLeaveDate.length > 10) { errorMsg = "Leave date must be less than 10 characters"; }
         setErrorLeaveDate(errorMsg);
     }
 
@@ -118,7 +118,6 @@ const PersonDetails = (props: any) => {
         setErrorRoom(""); setErrorLeaveDate("");
     }
 
-
     return (
         <Modal
             open={props.detailsOpen}
@@ -136,6 +135,8 @@ const PersonDetails = (props: any) => {
                     props.setDetailsMode('edit');
                 }
                 else if (props.detailsMode === 'edit') {
+                    formalizeData();
+                    //TODO: somehow wait for formalize to take effect before saving changes
                     invoke('update_person', {oldId: props.person.id, newInfo: {
                         id: newID,
                         rank: newRank,
