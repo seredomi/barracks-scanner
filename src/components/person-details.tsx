@@ -113,9 +113,9 @@ const PersonDetails = (props: any) => {
     function clearData() {
         setNewID(""); setNewRank(""); setNewLast(""); setNewFirst("");
         setNewGroup(""); setNewRoom(""); setNewLeaveDate("");
+
         setErrorID(""); setErrorLast(""); setErrorFirst("");
         setErrorRoom(""); setErrorLeaveDate("");
-        console.log("id: " + newID + ", rank: " + newRank + ", last: " + newLast + ", first: " + newFirst + ", group: " + newGroup + ", room: " + newRoom + ", leave_date: " + newLeaveDate)
     }
 
 
@@ -150,6 +150,7 @@ const PersonDetails = (props: any) => {
                     props.setDetailsMode('view');
                     props.refresh();
                     props.setDetailsOpen(false);
+                    clearData();
                 }
                 else { // new person
                     formalizeData();
@@ -157,8 +158,8 @@ const PersonDetails = (props: any) => {
                     props.refresh();
                     props.setDetailsOpen(false);
                     props.setDetailsMode('view');
+                    clearData();
                 }
-                clearData();
             } }
         >
             
