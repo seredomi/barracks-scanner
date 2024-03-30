@@ -3,7 +3,7 @@ import { Checkmark, WarningAlt } from '@carbon/icons-react';
 import { appWindow } from '@tauri-apps/api/window';
 import { invoke } from '@tauri-apps/api/tauri';
 import { useState } from 'react';
-import Person from '../../classes/person';
+import { Person } from '../../classes/person';
 
 export async function checkID(idArg: string)  {
     let test: string = await invoke('check_id', { id: idArg });

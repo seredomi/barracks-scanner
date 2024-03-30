@@ -1,25 +1,22 @@
 import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem } from '@carbon/react';
 import { invoke } from '@tauri-apps/api/tauri';
-import { emptyPerson } from '../store';
-import Person from '../classes/person';
+import { Person, emptyPerson } from '../classes/person';
 
 const PersonDetails = (props: any) => {
 
     // maintain separate state for edits, but still update when new person selected
-    const [ editID, setEditID ] = useState("");
-    const [ editRank, setEditRank ] = useState("");
-    const [ editLast, setEditLast ] = useState("");
-    const [ editFirst, setEditFirst ] = useState("");
-    const [ editGroup, setEditGroup ] = useState("");
-    const [ editRoom, setEditRoom ] = useState("");
-    const [ editLeaveDate, setEditLeaveDate ] = useState("");
+    const [ newID, setNewID ] = useState("");
+    const [ newRank, setNewRank ] = useState("");
+    const [ newLast, setNewLast ] = useState("");
+    const [ newFirst, setNewFirst ] = useState("");
+    const [ newGroup, setNewGroup ] = useState("");
+    const [ newRoom, setNewRoom ] = useState("");
+    const [ newLeaveDate, setNewLeaveDate ] = useState("");
 
     const [ errorID, setErrorID ] = useState("");
-    const [ errorRank, setErrorRank ] = useState("");
     const [ errorLast, setErrorLast ] = useState("");
     const [ errorFirst, setErrorFirst ] = useState("");
-    const [ errorGroup, setErrorGroup ] = useState("");
     const [ errorRoom, setErrorRoom ] = useState("");
     const [ errorLeaveDate, setErrorLeaveDate ] = useState("");
 
@@ -27,37 +24,37 @@ const PersonDetails = (props: any) => {
     const [ allValid, setAllValid ] = useState(false);
 
     useEffect(() => {
-        setEditID(props.person.id);
-        setEditRank(props.person.rank);
-        setEditLast(props.person.last);
-        setEditFirst(props.person.first);
-        setEditGroup(props.person.group);
-        setEditRoom(props.person.room);
-        setEditLeaveDate(props.person.leave_date);
+        setNewID(props.person.id);
+        setNewRank(props.person.rank);
+        setNewLast(props.person.last);
+        setNewFirst(props.person.first);
+        setNewGroup(props.person.group);
+        setNewRoom(props.person.room);
+        setNewLeaveDate(props.person.leave_date);
     } , [props.person])
 
-    useEffect(() => {validateID();}, [editID])
-    useEffect(() => {validateRank();}, [editRank])
-    useEffect(() => {validateLast();}, [editLast])
-    useEffect(() => {validateFirst();}, [editFirst])
-    useEffect(() => {validateGroup();}, [editGroup])
-    useEffect(() => {validateRoom();}, [editRoom])
-    useEffect(() => {validateLeaveDate();}, [editLeaveDate])
 
-    useEffect(() => { validateAll(); }, [editID, editRank, editLast, editFirst, editGroup, editRoom, editLeaveDate])
+    useEffect (() => { validateID(); }, [newID]);
+    useEffect (() => { validateLast(); }, [newLast]);
+    useEffect (() => { validateFirst(); }, [newFirst]);
+    useEffect (() => { validateRoom(); }, [newRoom]);
+    useEffect (() => { validateLeaveDate(); }, [newLeaveDate]);
+
+    useEffect(() => { validateAll(); }, [newID, newRank, newLast, newFirst, newGroup, newRoom, newLeaveDate,
+                                        errorID, errorLast, errorFirst, errorRoom, errorLeaveDate])
 
 
     async function validateID() {
         let errorMsg: string = "";
-        if (editID.length > 30) { errorMsg = "ID must be less than 40 characters"; }
-        else if (editID.includes(';')) { errorMsg = "ID must not contain ; "; }
+        if (newID.length > 40) { errorMsg = "ID must be less than 40 characters"; }
+        else if (newID.includes(';')) { errorMsg = "ID must not contain ; "; }
         // ensure ID is unique for new entries
         else if (props.detailsMode === 'new') {
-            await invoke ('check_id', {id: editID}).then(
+            await invoke ('check_id', {id: newID}).then(
                 (result) => {
                     const p: Person = new Person(result);
-                    if (p.found) { errorMsg = "ID already exists"; setAllValid(false);}
-                    else { setAllValid(true); }
+                    if (p.found) { errorMsg = "ID already exists"; }
+                    else { errorMsg = ""; }
                 },
                 (error) => { console.log("Error checking for duplicate ID: " + error); }
             )
@@ -65,45 +62,34 @@ const PersonDetails = (props: any) => {
         setErrorID(errorMsg);
     }
 
-    function validateRank() {
-        let errorMsg: string = "";
-        setErrorRank(errorMsg);
-    }
-
     function validateLast() {
         let errorMsg: string = "";
-        if (editLast.length > 40) { errorMsg = "Last name must be less than 30 characters"; }
+        if (newLast.length > 20) { errorMsg = "Last name must be less than 20 characters"; }
         setErrorLast(errorMsg);
     }
 
     function validateFirst() {
         let errorMsg: string = "";
-        if (editFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
+        if (newFirst.length > 20) { errorMsg = "First name must be less than 20 characters"; }
         setErrorFirst(errorMsg);
-    }
-
-    function validateGroup() {
-        let errorMsg: string = "";
-        setErrorGroup(errorMsg);
     }
 
     function validateRoom() {
         let errorMsg: string = "";
-        if (editRoom.length > 30) { errorMsg = "Room must be less than 30 characters"; }
+        if (newRoom.length > 0 && ! /^[\d]{3}[abAB]{1}/.test(newRoom)) { errorMsg = "Room should be 3 digits + A or B"; }
         setErrorRoom(errorMsg);
     }
 
     function validateLeaveDate() {
         let errorMsg: string = "";
-        if (editLeaveDate.length > 30) { errorMsg = "Leave date must be less than 30 characters"; }
+        if (newLeaveDate.length > 20) { errorMsg = "Leave date must be less than 20 characters"; }
         setErrorLeaveDate(errorMsg);
     }
 
     function validateAll() {
-        console.log("validating all");
-        if (editID.length < 1 || editRank.length < 1 || editLast.length < 1 || editFirst.length < 1 || editGroup.length < 1 || editRoom.length < 1 || editLeaveDate.length < 1) {
-            setAllValid(false);
+        if (newID.length < 1 || newRank.length < 1 || newLast.length < 1 || newFirst.length < 1 || newGroup.length < 1 || newRoom.length < 1 || newLeaveDate.length < 1) {
             setAnyEmpty(true);
+            setAllValid(false);
             return;
         }
         setAnyEmpty(false);
@@ -115,10 +101,23 @@ const PersonDetails = (props: any) => {
         setAllValid(true);
     }
 
-
-    function DetailsModal() {
-
+    function formalizeData() {
+        // capitalize first letter of each word
+        setNewLast(newLast.replace(/\b\w/g, l => l.toUpperCase()));
+        setNewFirst(newFirst.replace(/\b\w/g, l => l.toUpperCase()));
+        // caliptalize room number letter
+        setNewRoom(newRoom.toUpperCase());
+        console.log("formalized: " + newLast + ", " + newFirst + ", " + newRoom);
     }
+
+    function clearData() {
+        setNewID(""); setNewRank(""); setNewLast(""); setNewFirst("");
+        setNewGroup(""); setNewRoom(""); setNewLeaveDate("");
+        setErrorID(""); setErrorLast(""); setErrorFirst("");
+        setErrorRoom(""); setErrorLeaveDate("");
+        console.log("id: " + newID + ", rank: " + newRank + ", last: " + newLast + ", first: " + newFirst + ", group: " + newGroup + ", room: " + newRoom + ", leave_date: " + newLeaveDate)
+    }
+
 
     return (
         <Modal
@@ -130,6 +129,7 @@ const PersonDetails = (props: any) => {
             onRequestClose={() => {
                 props.setDetailsOpen(false)
                 props.setDetailsMode('view')
+                clearData();
             }}
             onRequestSubmit={ () => {
                 if (props.detailsMode === 'view') {
@@ -137,13 +137,13 @@ const PersonDetails = (props: any) => {
                 }
                 else if (props.detailsMode === 'edit') {
                     invoke('update_person', {oldId: props.person.id, newInfo: {
-                        id: editID,
-                        rank: editRank,
-                        last: editLast,
-                        first: editFirst,
-                        group: editGroup,
-                        room: editRoom,
-                        leave_date: editLeaveDate,
+                        id: newID,
+                        rank: newRank,
+                        last: newLast,
+                        first: newFirst,
+                        group: newGroup,
+                        room: newRoom,
+                        leave_date: newLeaveDate,
                         found: true
 
                     }})
@@ -152,23 +152,28 @@ const PersonDetails = (props: any) => {
                     props.setDetailsOpen(false);
                 }
                 else { // new person
+                    formalizeData();
+                    console.log("add person: id=" + newID + ", rank=" + newRank + ", last=" + newLast + ", first=" + newFirst + ", group=" + newGroup + ", room=" + newRoom + ", leave_date=" + newLeaveDate);
                     props.refresh();
-                    console.log("add person: id=" + editID + ", rank=" + editRank + ", last=" + editLast + ", first=" + editFirst + ", group=" + editGroup + ", room=" + editRoom + ", leave_date=" + editLeaveDate);
                     props.setDetailsOpen(false);
                     props.setDetailsMode('view');
                 }
-            } } >
+                clearData();
+            } }
+        >
             
-            <div id='error-message' className='formRow' margin-top='3rem'>
+            <br/>
+            <div id='error-message' className='formRow' >
                 <TextInput
                     id='id-input'
                     labelText="ID (Scan back of ID)"
                     disabled={props.detailsMode === 'new' ? false : true}
-                    value={editID}
-                    onChange={(e) => setEditID(e.target.value)}
+                    value={newID}
+                    onChange={(e) => setNewID(e.target.value)}
                     onBlur={() => validateID()}
                     invalid={errorID.length > 0}
                     invalidText={errorID}
+                    helperText="&nbsp;"
                 />
             </div>
 
@@ -177,10 +182,9 @@ const PersonDetails = (props: any) => {
                     id='rank-select'
                     labelText="Rank"
                     readOnly={props.detailsMode === 'view'}
-                    value={editRank}
-                    onChange={(e) => setEditRank(e.target.value)}
-                    invalid={errorRank.length > 0}
-                    invalidText={errorRank}
+                    value={newRank}
+                    onChange={(e) => setNewRank(e.target.value)}
+                    helperText="&nbsp;"
                 >
                     <SelectItem value="" text="" />
                     <SelectItemGroup label="Enlisted">
@@ -226,31 +230,32 @@ const PersonDetails = (props: any) => {
                     id='last-name-input'
                     labelText="Last name"
                     readOnly={props.detailsMode === 'view'}
-                    value={editLast}
-                    onChange={(e) => setEditLast(e.target.value)}
+                    value={newLast}
+                    onChange={(e) => setNewLast(e.target.value)}
                     invalid={errorLast.length > 0}
                     invalidText={errorLast}
+                    helperText="&nbsp;"
                 />
                 <TextInput
                     id='first-name-input'
                     labelText="First name"
                     readOnly={props.detailsMode === 'view'}
-                    value={editFirst}
-                    onChange={(e) => setEditFirst(e.target.value)}
+                    value={newFirst}
+                    onChange={(e) => setNewFirst(e.target.value)}
                     invalid={errorFirst.length > 0}
                     invalidText={errorFirst}
+                    helperText="&nbsp;"
                 />
             </div>
 
             <div id='room-group-date-input' className='formRow'>
                 <Select
                     id='group-select'
-                    labelText="Group"
+                    labelText="Category"
                     readOnly={props.detailsMode === 'view'}
-                    value={editGroup}
-                    onChange={(e) => setEditGroup(e.target.value)}
-                    invalid={errorGroup.length > 0}
-                    invalidText={errorGroup}
+                    value={newGroup}
+                    onChange={(e) => setNewGroup(e.target.value)}
+                    helperText="&nbsp;"
                 >
                     <SelectItem value="" text="" />
                     <SelectItem value="Resident" text="Resident" />
@@ -262,25 +267,27 @@ const PersonDetails = (props: any) => {
                 </Select>
                 <TextInput
                     id='room-input'
-                    labelText="Room"
+                    labelText="Room number"
                     readOnly={props.detailsMode === 'view'}
-                    value={editRoom}
-                    onChange={(e) => setEditRoom(e.target.value)}
+                    value={newRoom}
+                    onChange={(e) => setNewRoom(e.target.value)}
                     invalid={errorRoom.length > 0}
                     invalidText={errorRoom}
+                    helperText="&nbsp;"
                 />
                 <TextInput
                     id='leave-date-input'
-                    labelText="Leave Date"
+                    labelText="Leave date"
                     readOnly={props.detailsMode === 'view'}
-                    value={editLeaveDate}
-                    onChange={(e) => setEditLeaveDate(e.target.value)}
+                    value={newLeaveDate}
+                    onChange={(e) => setNewLeaveDate(e.target.value)}
                     invalid={errorLeaveDate.length > 0}
                     invalidText={errorLeaveDate}
+                    helperText="&nbsp;"
                 />
             </div>
 
-            <br /> <p>{anyEmpty ? "All fields are required" : ""}</p>
+            <p style={{color: 'red'}}>{ props.detailsMode !== 'view' && anyEmpty ? "All fields are required" : "  " }</p>
 
         </Modal>
     )
