@@ -39,8 +39,6 @@ const PersonDetails = (props: any) => {
     useEffect (() => { validateFirst(); }, [newFirst]);
     useEffect (() => { validateRoom(); }, [newRoom]);
 
-    useEffect (() => { console.log("leave date: " + newLeaveDate); }, [newLeaveDate]);
-
     useEffect(() => { validateAll(); }, [newID, newRank, newLast, newFirst, newGroup, newRoom, newLeaveDate,
                                         errorID, errorLast, errorFirst, errorRoom, errorLeaveDate])
 
@@ -158,7 +156,16 @@ const PersonDetails = (props: any) => {
                 }
                 else { // new person
                     formalizeData();
-                    console.log("add person: id=" + newID + ", rank=" + newRank + ", last=" + newLast + ", first=" + newFirst + ", group=" + newGroup + ", room=" + newRoom + ", leave_date=" + newLeaveDate);
+                    invoke('add_person', {newPerson: {
+                        id: newID,
+                        rank: newRank,
+                        last: newLast,
+                        first: newFirst,
+                        group: newGroup,
+                        room: newRoom,
+                        leave_date: newLeaveDate,
+                        found: true
+                    }})
                     props.refresh();
                     props.setDetailsOpen(false);
                     props.setDetailsMode('view');
@@ -289,6 +296,7 @@ const PersonDetails = (props: any) => {
                     dateFormat='Y-m-d'
                     short={true}
                     onChange={(e) => { setNewLeaveDate(formatCalendarDate(e.toLocaleString()))}}
+                    readOnly={props.detailsMode === 'view'}
                     >
                     <DatePickerInput
                         id='leave-date-input'

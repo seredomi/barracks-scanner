@@ -23,12 +23,17 @@ async fn update_person(app_handle: AppHandle, old_id: String, new_info: person::
     return app_handle.db(|db: &rusqlite::Connection| database::update_person(db, old_id, new_info));
 }
 
+#[tauri::command]
+async fn add_person(app_handle: AppHandle, new_person: person::Person) -> () {
+    return app_handle.db(|db: &rusqlite::Connection| database::add_person(db, new_person));
+}
+
 fn main() {
 
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, query_all, update_person])
+        .invoke_handler(tauri::generate_handler![check_id, query_all, update_person, add_person])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();

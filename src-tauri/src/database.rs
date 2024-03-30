@@ -67,5 +67,17 @@ pub fn update_person(db: &Connection, old_id: String, new_info: Person) -> () {
         + "', firstName = '" + &new_info.get_first() + "', room = '" + &new_info.get_room()
         + "', groupName = '" + &new_info.get_group() + "', leaveDate = '" + &new_info.get_leave_date_string()
         + "' WHERE id = '" + &old_id + "'";
+    //TODO: i think there should be a prepare statement first
+    let _ = db.execute(&query, []);
+}
+
+
+pub fn add_person(db: &Connection, new_person: Person) -> () {
+    let query = 
+        "INSERT INTO personnel (id, rank, lastName, firstName, room, groupName, leaveDate) VALUES ('".to_string() 
+        + &new_person.get_id() + "', '" + &new_person.get_rank() + "', '" + &new_person.get_last() 
+        + "', '" + &new_person.get_first() + "', '" + &new_person.get_room() + "', '" + &new_person.get_group() 
+        + "', '" + &new_person.get_leave_date_string() + "')";
+    //TODO: i think there should be a prepare statement first
     let _ = db.execute(&query, []);
 }
