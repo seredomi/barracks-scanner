@@ -1,7 +1,7 @@
 type rankType = "PVT" | "PV2" | "PFC" | "SPC" | "CPL" | "SGT" | "SSG" | "SFC" | "MSG" | "1SG" | "SGM" | "CSM" | "WO1" | "CW2" | "CW3" | "CW4" | "CW5" | "2LT" | "1LT" | "CPT" | "MAJ" | "LTC" | "COL" | "BG" | "MG" | "LTG" | "GEN" | "GA";
 type groupType = "Resident" | "Hotel Divarty" | "Rotational Unit" | "Chain of Command" | "Guest"; 
 
-class Person {
+export class Person {
     id: string
     rank: rankType;
     last: string;
@@ -24,4 +24,6 @@ class Person {
     }
 }
 
-export default Person;
+export const emptyPerson= new Person({
+    id: "", rank: "", last: "", first: "", room: "", group: "", leave_date: "", found: false
+})
