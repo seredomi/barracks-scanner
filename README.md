@@ -40,11 +40,12 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [ ] button to add if not found?
 ### personnel
 - [x] display all
-  - [ ] fix issue with persistent details button highlights
+  - [x] fix issue with persistent details button highlights
 - [x] search
 - [ ] create
 - [x] edit
-  - [ ] input validation
+  - [x] input validation
+  - [ ] wait for formalizeData() to finish before saving storing changes
   - [ ] date
 - [ ] delete
 - [ ] sort?
@@ -67,8 +68,3 @@ CREATE TABLE personnel(
   groupName TEXT CHECK(groupName IN('Resident','Rotational Unit','COC','Guest','Hotel Divarty')),
   leaveDate DATE);
 ```
-### fonts
-i always get `Failed to decode downloaded font: <URL>` and `OTS parsing error: invalid sfntVersion: 1008821359` error messages in the Webview console, probably due to the url that the carbon .scss import sources its IBM Plex fonts from <br/>
-i've temporarily solved this by copying the `./node_modules/@IBM/` fonts folder int `./src` <br/>
-this allows the correct fonts to render, but the error messages persist <br/>
-this works for the executable in the target folder as well
