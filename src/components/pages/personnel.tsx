@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
-        Button, OverflowMenu } from '@carbon/react';
-import { AddLarge } from '@carbon/icons-react';
+        Button, IconButton } from '@carbon/react';
+import { AddLarge, OverflowMenuHorizontal, OverflowMenuVertical } from '@carbon/icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { queryAll, AppDispatch, emptyPerson } from '../../store';
 import { checkID } from './id-scanner';
@@ -50,7 +50,7 @@ const PersonnelTable = (props: any) => {
                             {row.cells.map(cell =>
                             <TableCell key={cell.id}> {cell.value} </TableCell>)}
                             <TableCell className="bx--table-column-menu">
-                                <OverflowMenu  size='sm' light flipped onClick={() => {
+                                <IconButton label='More' size='sm' kind="ghost" onClick={() => {
                                     checkID(row.id).then(
                                         (result) => {
                                             props.setSelectedPerson(result);
@@ -59,7 +59,8 @@ const PersonnelTable = (props: any) => {
                                         (error) => { console.log("error: " + error); }
             )
                                 } } >
-                                </OverflowMenu>
+                                    <OverflowMenuHorizontal />
+                                </IconButton>
                             </TableCell>
                         </TableRow>)}
                     </TableBody>
