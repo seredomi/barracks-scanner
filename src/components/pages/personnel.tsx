@@ -26,7 +26,6 @@ const PersonnelTable = (props: any) => {
                     <TableToolbarContent>
                         <TableToolbarSearch onChange = {props.onSearchChange} />
                         <Button renderIcon={AddLarge} onClick={() => {
-                            console.log(props.selectedPerson);
                             props.setDetailsMode('new')
                             props.setDetailsOpen(true)
                             }}>
@@ -70,24 +69,15 @@ const PersonnelTable = (props: any) => {
     )
 }
 
-
-
-
 export function PersonnelPage() {
 
     const [search, setSearch] = useState('');
-
-    const onSearchChange = (e: any) => {
-        setSearch(e.target.value);
-        console.log(e.target.value);
-    }
+    const onSearchChange = (e: any) => { setSearch(e.target.value); }
 
     const refresh = () => { dispatch(queryAll(search)); }
 
     const dispatch = useDispatch<AppDispatch>();
-    useEffect(() => {
-        refresh();
-    }, [search]);
+    useEffect(() => { refresh(); }, [search]);
 
     const personnel = useSelector((state: any) => state.personnel.personnelData);
 
