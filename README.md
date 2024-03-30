@@ -42,16 +42,20 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] display all
   - [x] fix issue with persistent details button highlights
 - [x] search
-- [ ] create
+- [x] create
 - [x] edit
   - [x] input validation
   - [ ] wait for formalizeData() to finish before saving storing changes
-  - [ ] date
+  - [x] date
 - [ ] delete
 - [ ] sort?
 - [ ] filter?
 ### scan history
-### settings
+### misc.
+- [ ] settings?
+- [ ] ensure prepare statements in database.rs
+- [ ] old entry purging
+- [ ] 
 ## other notes
 ### sqlite file
 i manually moved a copy of `barracks.db` to the build directory `./src-tauri/target/release/` <br/>
