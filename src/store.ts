@@ -42,7 +42,7 @@ export const queryAll = createAsyncThunk(
 
 const personnelSlice = createSlice({
     name: 'personnel',
-    initialState: {personnelData: []},
+    initialState: {personnelData: [emptyPerson]},
     reducers: { },
     extraReducers: (builder) => {
         builder.addCase(queryAll.fulfilled, (state, action) => {

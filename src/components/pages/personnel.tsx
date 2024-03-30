@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
         Button, IconButton } from '@carbon/react';
-import { AddLarge, OverflowMenuHorizontal, OverflowMenuVertical } from '@carbon/icons-react';
+import { AddLarge, OverflowMenuHorizontal } from '@carbon/icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { queryAll, AppDispatch, emptyPerson } from '../../store';
 import { checkID } from './id-scanner';
