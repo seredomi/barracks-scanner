@@ -4,7 +4,7 @@ import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableTool
         Button, IconButton } from '@carbon/react';
 import { AddLarge, OverflowMenuHorizontal } from '@carbon/icons-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { queryAll, AppDispatch, emptyPerson } from '../../store';
+import { queryPersonnel, AppDispatch, emptyPerson } from '../../store';
 import { checkID } from './id-scanner';
 import PersonDetails from '../person-details';
 
@@ -75,9 +75,8 @@ export function PersonnelPage() {
     const [search, setSearch] = useState('');
     const onSearchChange = (e: any) => { setSearch(e.target.value); }
 
-    const refresh = () => { dispatch(queryAll(search)); }
-
     const dispatch = useDispatch<AppDispatch>();
+    const refresh = () => { dispatch(queryPersonnel(search)); }
     useEffect(() => { refresh(); }, [search]);
 
     const personnel = useSelector((state: any) => state.personnel.personnelData);
