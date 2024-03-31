@@ -22,24 +22,26 @@ const LogsTable = (props: any) => {
             <TableContainer>
                 <TableToolbar>
                     <TableToolbarContent>
-                        <TableToolbarSearch onChange = { (e) => props.setSearch(e.target.value) } />
-                    </TableToolbarContent>
-                    <DatePicker 
-                        datePickerType="range"
-                        dateFormat='Y-m-d'
-                        >
-                        <DatePickerInput 
-                            id="date-picker-input-id-start" 
-                            labelText=" "
-                            onChange={(e) => props.setStartDate(formatCalendarDate(e.toLocaleString()))}
-                            placeholder="Start" />
-                        <DatePickerInput 
-                            id="date-picker-input-id-start" 
-                            labelText=" "
-                            onChange={(e) => props.setEndDate(formatCalendarDate(e.toLocaleString()))}
-                            placeholder="End" />
+                        <DatePicker 
+                            datePickerType="range"
+                            dateFormat='Y-m-d'
+                            onChange={ (e) => {
+                                props.setStartDate(formatCalendarDate(e[0].toLocaleString()));
+                                props.setEndDate(formatCalendarDate(e[1].toLocaleString()));
+                            } }
+                            >
+                            <DatePickerInput 
+                                id="date-picker-input-id-start" 
+                                labelText=" "
+                                placeholder="Start" />
+                            <DatePickerInput 
+                                id="date-picker-input-id-start" 
+                                labelText=" "
+                                placeholder="End" />
 
-                    </DatePicker>
+                        </DatePicker>
+                        <TableToolbarSearch onChange = { (e: any) => props.setSearch(e.target.value) } />
+                    </TableToolbarContent>
                 </TableToolbar>
                 <Table overflowMenuOnHover={true} isSortable={true}>
                 <TableHead>
@@ -88,7 +90,11 @@ export function ScanHistoryPage() {
 
     const dispatch = useDispatch<AppDispatch>();
     const refresh = () => { dispatch(queryLogs(query)) }
-    useEffect(() => { refresh(); }, [query]);
+    useEffect(() => { 
+        console.log("refreshing with query:");
+        console.log(query);
+        refresh(); 
+    }, [query]);
 
     return (
         <div>
