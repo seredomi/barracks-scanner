@@ -39,6 +39,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
   - [ ] format results better (diff component needed?)
   - [ ] button to add if not found?
 ### personnel
+- [x] backend query
 - [x] display all
   - [x] fix issue with persistent details button highlights
 - [x] search
@@ -51,11 +52,16 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [ ] sort?
 - [ ] filter?
 ### scan history
+- [x] backend query
+- [x] display all
+- [x] search
+- [ ] date range
+- [ ] sort?
 ### misc.
 - [ ] settings?
 - [ ] ensure prepare statements in database.rs
 - [ ] old entry purging
-- [ ] 
+- [ ] caching for performance?
 ## other notes
 ### sqlite file
 i manually moved a copy of `barracks.db` to the build directory `./src-tauri/target/release/` <br/>
