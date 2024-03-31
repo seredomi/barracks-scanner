@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem, DatePicker, DatePickerInput } from '@carbon/react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Person } from '../classes/person';
+import { formatCalendarDate } from '../classes/date';
 
 const PersonDetails = (props: any) => {
 
@@ -108,15 +109,6 @@ const PersonDetails = (props: any) => {
 
         setErrorID(""); setErrorLast(""); setErrorFirst("");
         setErrorRoom(""); setErrorLeaveDate("");
-    }
-
-    function formatCalendarDate(date: string) {
-        // convert m/d/yyy to yyyy-mm-dd
-        let parts: string[] = date.split('/');
-        const month: string = parts[0].length === 1 ? '0' + parts[0] : parts[0];
-        const day: string = parts[1].length === 1 ? '0' + parts[1] : parts[1];
-        const year: string = parts[2].slice(0, 4);
-        return year + '-' + month + '-' + day;
     }
 
     return (
@@ -280,7 +272,7 @@ const PersonDetails = (props: any) => {
                 </Select>
                 <TextInput
                     id='room-input'
-                    labelText="Room number"
+                    labelText="Room"
                     readOnly={props.detailsMode === 'view'}
                     value={newRoom}
                     onChange={(e) => setNewRoom(e.target.value)}
