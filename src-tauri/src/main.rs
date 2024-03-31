@@ -5,6 +5,7 @@
 mod state;
 mod database;
 mod person;
+mod log;
 use state::{AppState, ServiceAccess};
 use tauri::{State, Manager, AppHandle};
 
@@ -14,8 +15,8 @@ async fn check_id(app_handle: AppHandle, id: String) -> person::Person {
 }
 
 #[tauri::command]
-async fn query_all(app_handle: AppHandle, search: String) -> Vec<person::Person> {
-    return app_handle.db(|db: &rusqlite::Connection| database::query_all(db, search));
+async fn query_personnel(app_handle: AppHandle, search: String) -> Vec<person::Person> {
+    return app_handle.db(|db: &rusqlite::Connection| database::query_personnel(db, search));
 }
 
 #[tauri::command]
@@ -28,12 +29,17 @@ async fn add_person(app_handle: AppHandle, new_person: person::Person) -> () {
     return app_handle.db(|db: &rusqlite::Connection| database::add_person(db, new_person));
 }
 
+#[tauri::command]
+async fn query_logs(app_handle: AppHandle, search: String, start_date: String, end_date: String) -> Vec<log::Log> {
+    return app_handle.db(|db: &rusqlite::Connection| database::query_logs(db, search, start_date, end_date));
+}
+
 fn main() {
 
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, query_all, update_person, add_person])
+        .invoke_handler(tauri::generate_handler![check_id, query_personnel, update_person, add_person, query_logs])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();

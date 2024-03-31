@@ -1,4 +1,5 @@
 use crate::person::Person;
+use crate::log::Log;
 use rusqlite::Connection;
 
 pub fn connect(filename: String) -> Result<Connection, rusqlite::Error> {
@@ -45,7 +46,7 @@ pub fn check_id(db: &Connection, id: String) -> Person {
 }
 
 
-pub fn query_all(db: &Connection, search: String) -> Vec<Person> {
+pub fn query_personnel(db: &Connection, search: String) -> Vec<Person> {
     let query = "SELECT * FROM personnel WHERE (id like '%".to_string() + &search
                         + "%' OR firstName like '%" + &search + "%' OR lastName like '%" + &search +
                         "%') ORDER BY lastName, firstName";
@@ -54,7 +55,7 @@ pub fn query_all(db: &Connection, search: String) -> Vec<Person> {
     match personnel {
         Ok(personnel) => return personnel,
         Err(_) => {
-            println!("Error in query_all ");
+            println!("Error in query_personnel ");
             return Vec::new()
         }
     }
@@ -80,4 +81,29 @@ pub fn add_person(db: &Connection, new_person: Person) -> () {
         + "', '" + &new_person.get_leave_date_string() + "')";
     //TODO: i think there should be a prepare statement first
     let _ = db.execute(&query, []);
+}
+
+
+
+pub fn query_logs(db: &Connection, search: String, start_date: String, end_date: String) -> Vec<Log> {
+    let query: String = 
+        "SELECT logs.id, rank, lastName, firstName, date, time FROM logs INNER JOIN personnel ON logs.id = personnel.id ".to_string()
+        + "WHERE (logs.id like '%" + &search + "%' OR firstName like '%" + &search + "%' OR lastName like '%" + &search + "%') "
+        + "AND date BETWEEN date('" + &start_date + "') AND date('" + &end_date + "') ORDER BY date DESC, time DESC";
+    println!("logs query: {}", query);
+    let mut statement = db.prepare(&query).unwrap();
+    let mut rows = statement.query([]).unwrap();
+    let mut logs = Vec::new();
+    while let Some(row) = rows.next().unwrap() {
+        logs.push(Log::new_real(
+            row.get(0).unwrap(),
+            row.get(1).unwrap(),
+            row.get(2).unwrap(),
+            row.get(3).unwrap(),
+            row.get(4).unwrap(),
+            row.get(5).unwrap(),
+            true,
+        ));
+    }
+    logs
 }
