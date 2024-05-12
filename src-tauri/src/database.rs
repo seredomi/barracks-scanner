@@ -30,7 +30,6 @@ fn query_to_personnel(conn: &Connection, query: &str) -> Result<Vec<Person>, rus
 
 pub fn check_id(db: &Connection, id: String) -> Person {
 
-    println!("Checking id: {}", id);
     let query: String = "SELECT * FROM personnel WHERE id = '".to_string() + &id + "'";
     let personnel = query_to_personnel(&db, &query);
     match personnel {
@@ -50,7 +49,6 @@ pub fn query_personnel(db: &Connection, search: String) -> Vec<Person> {
     let query = "SELECT * FROM personnel WHERE (id like '%".to_string() + &search
                         + "%' OR firstName like '%" + &search + "%' OR lastName like '%" + &search +
                         "%') ORDER BY lastName, firstName";
-    print!("Query: {}", query);
     let personnel = query_to_personnel(&db, &query);
     match personnel {
         Ok(personnel) => return personnel,
@@ -90,7 +88,6 @@ pub fn query_logs(db: &Connection, search: String, start_date: String, end_date:
         "SELECT logs.id, rank, lastName, firstName, date, time FROM logs INNER JOIN personnel ON logs.id = personnel.id ".to_string()
         + "WHERE (logs.id like '%" + &search + "%' OR firstName like '%" + &search + "%' OR lastName like '%" + &search + "%') "
         + "AND date BETWEEN date('" + &start_date + "') AND date('" + &end_date + "') ORDER BY date DESC, time DESC";
-    println!("logs query: {}", query);
     let mut statement = db.prepare(&query).unwrap();
     let mut rows = statement.query([]).unwrap();
     let mut logs = Vec::new();
