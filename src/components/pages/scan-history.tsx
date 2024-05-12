@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
     Table, TableHead, TableRow, TableHeader, TableBody, TableCell, DatePicker, DatePickerInput } from '@carbon/react';
 import { useSelector, useDispatch } from 'react-redux';
-import { queryLogs, AppDispatch, emptyLog, LogQuery } from '../../store';
+import { queryLogs, AppDispatch, LogQuery } from '../../store';
 import { formatCalendarDate } from '../../classes/date';
 
 const headers = [
@@ -33,10 +33,13 @@ const LogsTable = (props: any) => {
                             <DatePickerInput 
                                 id="date-picker-input-id-start" 
                                 labelText=" "
-                                placeholder="Start" />
+                                placeholder="Start"
+                                defaultValue={formatCalendarDate(new Date(Date.now()).toLocaleString())}
+                                 />
                             <DatePickerInput 
                                 id="date-picker-input-id-start" 
                                 labelText=" "
+                                defaultValue={formatCalendarDate(new Date(Date.now()).toLocaleString())}
                                 placeholder="End" />
 
                         </DatePicker>
@@ -70,7 +73,7 @@ const LogsTable = (props: any) => {
 export function ScanHistoryPage() {
 
     const [ search, setSearch ] = useState<string>("");
-    const [ startDate, setStartDate ] = useState<string>('2023-01-01');
+    const [ startDate, setStartDate ] = useState<string>(formatCalendarDate(new Date(Date.now()).toLocaleString()));
     const [ endDate, setEndDate ] = useState<string>(formatCalendarDate(new Date(Date.now()).toLocaleString()));
     const [ query, setQuery ] = useState<LogQuery>({ search: search, startDate: startDate, endDate: endDate });
 
@@ -90,11 +93,7 @@ export function ScanHistoryPage() {
 
     const dispatch = useDispatch<AppDispatch>();
     const refresh = () => { dispatch(queryLogs(query)) }
-    useEffect(() => { 
-        console.log("refreshing with query:");
-        console.log(query);
-        refresh(); 
-    }, [query]);
+    useEffect(() => { refresh(); }, [query]);
 
     return (
         <div>
