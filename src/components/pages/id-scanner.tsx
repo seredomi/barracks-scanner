@@ -95,7 +95,7 @@ export function IDScannerPage() {
                 startIdx = i;
             }
 
-            if (startIdx === keyBuffer.length) {console.log("problem"); keyBuffer = []; keyTimes = []; return; }
+            if (startIdx === keyBuffer.length) { keyBuffer = []; keyTimes = []; return; }
             if (startIdx > 0) {
                 keyBuffer = keyBuffer.slice(startIdx-1);
             }
