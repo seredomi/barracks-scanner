@@ -22,6 +22,7 @@ const LogsTable = (props: any) => {
             <TableContainer>
                 <TableToolbar>
                     <TableToolbarContent>
+                        <TableToolbarSearch onChange = { (e: any) => props.setSearch(e.target.value) } />
                         <DatePicker 
                             datePickerType="range"
                             dateFormat='Y-m-d'
@@ -43,7 +44,6 @@ const LogsTable = (props: any) => {
                                 placeholder="End" />
 
                         </DatePicker>
-                        <TableToolbarSearch onChange = { (e: any) => props.setSearch(e.target.value) } />
                     </TableToolbarContent>
                 </TableToolbar>
                 <Table overflowMenuOnHover={true} isSortable={true}>
