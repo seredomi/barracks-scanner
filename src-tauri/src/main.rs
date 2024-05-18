@@ -15,6 +15,11 @@ async fn check_id(app_handle: AppHandle, id: String) -> person::Person {
 }
 
 #[tauri::command]
+async fn log_scan(app_handle: AppHandle, id: String) -> () {
+    return app_handle.db(|db: &rusqlite::Connection| database::log_scan(db, id));
+}
+
+#[tauri::command]
 async fn query_personnel(app_handle: AppHandle, search: String) -> Vec<person::Person> {
     return app_handle.db(|db: &rusqlite::Connection| database::query_personnel(db, search));
 }
@@ -35,8 +40,8 @@ async fn query_logs(app_handle: AppHandle, search: String, start_date: String, e
 }
 
 #[tauri::command]
-async fn log_scan(app_handle: AppHandle, id: String) -> () {
-    return app_handle.db(|db: &rusqlite::Connection| database::log_scan(db, id));
+async fn purge_personnel(app_handle: AppHandle) -> Vec<person::Person> {
+    return app_handle.db(|db: &rusqlite::Connection| database::purge_personnel(db));
 }
 
 fn main() {
@@ -44,12 +49,13 @@ fn main() {
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, query_personnel, update_person, add_person, query_logs, log_scan])
+        .invoke_handler(tauri::generate_handler![check_id, log_scan, query_personnel, update_person, add_person, query_logs, purge_personnel])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();
             let db = database::connect("barracks.db".to_string()).expect("Couldn't connect to 'barracks.db'");
             *app_state.db.lock().unwrap() = Some(db);
+
             Ok(())
         })
         .run(tauri::generate_context!())

@@ -111,3 +111,15 @@ pub fn log_scan(db: &Connection, id: String) -> () {
     let mut statement = db.prepare(&query).unwrap();
     let _ = statement.execute([]);
 }
+
+pub fn purge_personnel(db: &Connection) -> Vec<Person> {
+    let query = "SELECT * FROM personnel WHERE leaveDate < date('now', 'localtime') ORDER BY leaveDate";
+    let personnel = query_to_personnel(&db, &query);
+    match personnel {
+        Ok(personnel) => return personnel,
+        Err(_) => {
+            println!("Error in purge_personnel ");
+            return Vec::new()
+        }
+    }
+}

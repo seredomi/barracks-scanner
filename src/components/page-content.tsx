@@ -4,6 +4,7 @@ import { PersonnelPage } from './pages/personnel.tsx';
 import { ScanHistoryPage } from './pages/scan-history.tsx';
 // import { page } from '../App.tsx';
 import { useSelector } from 'react-redux';
+import '../purger.tsx';
 
 const PageContent = () => {
 
