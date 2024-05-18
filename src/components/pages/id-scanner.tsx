@@ -7,7 +7,6 @@ import { Person } from '../../classes/person';
 
 export async function checkID(idArg: string)  {
     let res: string = await invoke('check_id', { id: idArg });
-    logScan(idArg);
     return res;
 }
 
@@ -73,13 +72,6 @@ const ResultPopup = (props: {open: boolean, setOpen: (a: boolean) => void, perso
     return ( <ActionableNotification {...resultProps} />)
 }
 
-const testButton = () => {
-    checkID("1TPC8D9X1E5LIKGAAT").then(
-        (result) => { console.log(result)},
-        (error) => { console.log("error: " + error); }
-    )
-
-}
 
 export function IDScannerPage() {
 
@@ -119,7 +111,7 @@ export function IDScannerPage() {
             let id = keyBuffer.join('').replaceAll('Shift','');
 
             logScan(id).then(
-                (_) => { console.log("success logging scan! (i think)")},
+                (_) => { },
                 (error) => { console.log("error logging scan: " + error); }
             )
 
@@ -129,7 +121,7 @@ export function IDScannerPage() {
                 (result) => {
                     setResultPerson(new Person(result));
                     setResultOpen(true);
-                 },
+                },
                 (error) => { console.log("error retrieving person details: " + error); }
             )
 
@@ -158,12 +150,18 @@ export function IDScannerPage() {
                         onClick={ () => {
 
                             setResultOpen(false);
-                            checkID("1TPC8D9X1E5LIKGAAT").then(
+                            let testID = "1TPC8D9X1E5LIKGAAT";
+                            checkID(testID).then(
                                 (result) => {
                                     setResultPerson(new Person(result));
                                     setResultOpen(true);
                                 },
                                 (error) => { console.log("error retrieving person details: " + error); }
+                            )
+
+                            logScan(testID).then(
+                                (_) => { },
+                                (error) => { console.log("error logging scan: " + error); }
                             )
                         } }
                     >
