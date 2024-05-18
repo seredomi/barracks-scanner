@@ -15,6 +15,8 @@
     "@reduxjs/toolkit": "^2.2.1",
     "@tauri-apps/api": "^1",
     "@types/carbon-components-react": "^7.55.10",
+    "@types/cron": "^2.4.0",
+    "cron": "^3.1.7",
     "lucide-react": "^0.358.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",
+    "@types/node": "^20.12.12",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.2.1",
