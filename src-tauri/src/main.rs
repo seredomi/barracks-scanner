@@ -34,12 +34,17 @@ async fn query_logs(app_handle: AppHandle, search: String, start_date: String, e
     return app_handle.db(|db: &rusqlite::Connection| database::query_logs(db, search, start_date, end_date));
 }
 
+#[tauri::command]
+async fn log_scan(app_handle: AppHandle, id: String) -> () {
+    return app_handle.db(|db: &rusqlite::Connection| database::log_scan(db, id));
+}
+
 fn main() {
 
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, query_personnel, update_person, add_person, query_logs])
+        .invoke_handler(tauri::generate_handler![check_id, query_personnel, update_person, add_person, query_logs, log_scan])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();

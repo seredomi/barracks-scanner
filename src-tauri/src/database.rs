@@ -104,3 +104,10 @@ pub fn query_logs(db: &Connection, search: String, start_date: String, end_date:
     }
     logs
 }
+
+pub fn log_scan(db: &Connection, id: String) -> () {
+    let query = "INSERT INTO logs (id, date, time) VALUES ('".to_string() + &id + "', date('now', 'localtime'), time('now', 'localtime'))";
+    println!("log scan query: **{}**", query);
+    let mut statement = db.prepare(&query).unwrap();
+    let _ = statement.execute([]);
+}

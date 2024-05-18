@@ -6,8 +6,14 @@ import { useState } from 'react';
 import { Person } from '../../classes/person';
 
 export async function checkID(idArg: string)  {
-    let test: string = await invoke('check_id', { id: idArg });
-    return test;
+    let res: string = await invoke('check_id', { id: idArg });
+    logScan(idArg);
+    return res;
+}
+
+export async function logScan(idArg: string) {
+    let res: string = await invoke('log_scan', {id: idArg});
+    return res;
 }
 
 async function handleFocusChange(setReadyToScan: (a: boolean) => void ) {
@@ -67,6 +73,14 @@ const ResultPopup = (props: {open: boolean, setOpen: (a: boolean) => void, perso
     return ( <ActionableNotification {...resultProps} />)
 }
 
+const testButton = () => {
+    checkID("1TPC8D9X1E5LIKGAAT").then(
+        (result) => { console.log(result)},
+        (error) => { console.log("error: " + error); }
+    )
+
+}
+
 export function IDScannerPage() {
 
     const [ readyToScan, setReadyToScan ] = useState(true);
@@ -101,7 +115,13 @@ export function IDScannerPage() {
             }
 
             // temp fix because js reads "Shift" as a key
+            // TODO: find a more performant way to do this?
             let id = keyBuffer.join('').replaceAll('Shift','');
+
+            logScan(id).then(
+                (_) => { console.log("success logging scan! (i think)")},
+                (error) => { console.log("error logging scan: " + error); }
+            )
 
             // get result from checkID
             setResultOpen(false);
@@ -110,7 +130,7 @@ export function IDScannerPage() {
                     setResultPerson(new Person(result));
                     setResultOpen(true);
                  },
-                (error) => { console.log("error: " + error); }
+                (error) => { console.log("error retrieving person details: " + error); }
             )
 
             keyBuffer = [];
@@ -132,6 +152,23 @@ export function IDScannerPage() {
                     {ReadyIndicator(readyToScan)}
                     <br /> <br /> <br />
                     {ResultPopup(resultProps)}
+                    {/* test button */}
+                    <br /> <br /> <br />
+                    <Button
+                        onClick={ () => {
+
+                            setResultOpen(false);
+                            checkID("1TPC8D9X1E5LIKGAAT").then(
+                                (result) => {
+                                    setResultPerson(new Person(result));
+                                    setResultOpen(true);
+                                },
+                                (error) => { console.log("error retrieving person details: " + error); }
+                            )
+                        } }
+                    >
+                        Simulate scan
+                    </Button>
                 </Column>
             </Row>
         </FlexGrid>
