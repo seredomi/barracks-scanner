@@ -46,7 +46,7 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] create
 - [x] edit
   - [x] input validation
-  - [x] wait for formalizeData() to finish before saving storing changes
+  - [ ] wait for formalizeData() to finish before saving storing changes
   - [x] date
 - [ ] delete
 - [ ] sort?
@@ -55,14 +55,13 @@ and this is just going to simplify maintenance on the program drastically. i mig
 - [x] backend query
 - [x] display all
 - [x] search
-- [x] date range
+- [ ] date range
 - [ ] sort?
 ### misc.
 - [ ] settings?
 - [ ] ensure prepare statements in database.rs
 - [ ] old entry purging
 - [ ] caching for performance?
-- [ ] floormap display
 ## other notes
 ### sqlite file
 i manually moved a copy of `barracks.db` to the build directory `./src-tauri/target/release/` <br/>
