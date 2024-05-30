@@ -112,7 +112,7 @@ pub fn log_scan(db: &Connection, id: String) -> () {
     let _ = statement.execute([]);
 }
 
-pub fn purge_personnel(db: &Connection) -> Vec<Person> {
+pub fn get_expired(db: &Connection) -> Vec<Person> {
     let query = "SELECT * FROM personnel WHERE leaveDate < date('now', 'localtime') ORDER BY leaveDate";
     let personnel = query_to_personnel(&db, &query);
     match personnel {

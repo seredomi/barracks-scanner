@@ -1,10 +1,10 @@
-import { Content } from '@carbon/react';
+import { Content, Button } from '@carbon/react';
 import { IDScannerPage } from './pages/id-scanner.tsx';
 import { PersonnelPage } from './pages/personnel.tsx';
 import { ScanHistoryPage } from './pages/scan-history.tsx';
 // import { page } from '../App.tsx';
 import { useSelector } from 'react-redux';
-import '../purger.tsx';
+import { PurgeModal } from '../purger.tsx';
 
 const PageContent = () => {
 
@@ -21,7 +21,13 @@ const PageContent = () => {
         }
     }
 
-    return <Content className='pageContent'> {whichPage()} </Content>
+    return  (
+        <Content className='pageContent'>
+            {/*PurgeModal()*/}
+
+            {whichPage()}
+        </Content>
+    )
 }
 
 export default PageContent;

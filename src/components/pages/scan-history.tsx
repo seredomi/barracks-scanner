@@ -91,6 +91,12 @@ export function ScanHistoryPage() {
         setEndDate: setEndDate,
     }
 
+    const emptyMessage = () => { 
+        if (logs.length === 0) {
+            return <p>No scan history found. Try adjusting the date range or search terms</p>
+        }
+    }
+
     const dispatch = useDispatch<AppDispatch>();
     const refresh = () => { dispatch(queryLogs(query)) }
     useEffect(() => { refresh(); }, [query]);
@@ -100,6 +106,8 @@ export function ScanHistoryPage() {
             <h2>Scan History</h2>
             <br/>
             {LogsTable(tableProps)}
+            <br/>
+            {emptyMessage()}
         </div>
     )
 }

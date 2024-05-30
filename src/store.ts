@@ -51,16 +51,28 @@ const personnelSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(queryPersonnel.fulfilled, (state, action) => {
             state.personnelData = action.payload
-        }),
-        builder.addCase(queryPersonnel.pending, (state) => {
-            state.personnelData = []
-        }),
-        builder.addCase(queryPersonnel.rejected, (state) => {
-            state.personnelData = []
         })
     }
 });
 
+export const getExpiredPersonnel = createAsyncThunk(
+    'personnel/getExpired',
+    async () => {
+        const rows: Person[] = await invoke('get_expired', { })
+        return rows;
+    },
+)
+
+const expiredSlice = createSlice({
+    name: 'expiredPersonnel',
+    initialState: {expiredData: [emptyPerson]},
+    reducers: { },
+    extraReducers: (builder) => {
+        builder.addCase(getExpiredPersonnel.fulfilled, (state, action) => {
+            state.expiredData = action.payload
+        })
+    }
+});
 
 // logs -------------------------------------
 export type Log = {
@@ -120,6 +132,7 @@ const store = configureStore({
     reducer: {
         page: pageSlice.reducer,
         personnel: personnelSlice.reducer,
+        expiredPersonnel: expiredSlice.reducer,
         logs: logsSlice.reducer,
     },
 });

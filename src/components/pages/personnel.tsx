@@ -28,7 +28,7 @@ const PersonnelTable = (props: any) => {
                         <Button renderIcon={AddLarge} onClick={() => {
                             props.setDetailsMode('new')
                             props.setDetailsOpen(true)
-                            }}>
+                        }}>
                             New
                         </Button>
                     </TableToolbarContent>
@@ -103,12 +103,20 @@ export function PersonnelPage() {
         setDetailsMode: setDetailsMode
     }
 
+    const emptyMessage = () => { 
+        if (personnel.length === 0) {
+            return <p>No personnel found</p>
+        }
+    }
+
     return (
         <div>
             <h2>Personnel</h2>
             <br/>
             {PersonDetails(detailsProps)}
             {PersonnelTable(tableProps)}
+            <br/>
+            {emptyMessage()}
         </div>
     )
 }
