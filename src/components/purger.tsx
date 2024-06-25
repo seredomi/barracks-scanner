@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getExpiredPersonnel, AppDispatch, emptyPerson }  from './store';
+import { getExpiredPersonnel, AppDispatch, emptyPerson }  from '../store';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
         TableBatchAction, TableBatchActions, TableSelectAll, TableSelectRow,
@@ -48,15 +48,13 @@ const ExpiredTable = (props: any) => {
                                     value={new Date("2025-01-02")}
                                     dateFormat='Y-m-d'
                                     short={true}
-                                    
+                                    light={true}
                                 >
                                     <DatePickerInput
-                                        light="true"
-                                        short="true"
                                         datePickerType='single'
                                         inputMode={'text'}
                                         id='leave-date-input'
-                                        labelText=''
+                                        labelText=' '
                                         placeholder='YYYY-MM-DD'
                                         
                                     />
@@ -74,37 +72,19 @@ const ExpiredTable = (props: any) => {
     )
 }
 
-
-
-export function PurgeModal() {
-
-    const [ purgeModalOpen, setPurgeModalOpen ] = useState(false);
-
-    const dispatch = useDispatch<AppDispatch>();
-
-    function fetchExpired() {
-        dispatch(getExpiredPersonnel());
-        setPurgeModalOpen(true);
-    }
-
-    // new CronJob(
-    //     '0,10,20,30,40,50 * * * * *',
-    //     fetchExpired, null, true
-    // );
-    const expiredPersonnel = useSelector((state: any) =>
-    state.expiredPersonnel.personnelData);
+export function PurgeModal(props: any) {
 
     const tableProps = {
-        expiredPersonnel: expiredPersonnel,
+        expiredPersonnel: props.expiredPersonnel,
         headers: headers
     }
 
     return (
         <Modal
-            open={purgeModalOpen}
+            open={props.purgeModalOpen}
             danger
             modalHeading="Expired personnel"
-            onRequestClose={() => setOpenPurgeModal(false)}
+            onRequestClose={() => props.setPurgeModalOpen(false)}
             passiveModal={true}
             preventCloseOnClickOutside={true}
             isFullWidth={true}
