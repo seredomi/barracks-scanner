@@ -144,7 +144,8 @@ export function IDScannerPage() {
                     {ReadyIndicator(readyToScan)}
                     <br /> <br /> <br />
                     {ResultPopup(resultProps)}
-                    {/* test button */}
+                    {/* test
+                    
                     <br /> <br /> <br />
                     <Button
                         onClick={ () => {
@@ -167,6 +168,8 @@ export function IDScannerPage() {
                     >
                         Simulate scan
                     </Button>
+                    
+                    button */}
                 </Column>
             </Row>
         </FlexGrid>
