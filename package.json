@@ -16,13 +16,16 @@
     "@tauri-apps/api": "^1",
     "@types/carbon-components-react": "^7.55.10",
     "@types/cron": "^2.4.0",
+    "@types/node-schedule": "^2.1.7",
     "cron": "^3.1.7",
     "lucide-react": "^0.358.0",
+    "node-schedule": "^2.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-redux": "^9.1.0",
     "sass": "^1.72.0",
-    "sass-loader": "^14.1.1"
+    "sass-loader": "^14.1.1",
+    "toad-scheduler": "^3.0.1"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1",

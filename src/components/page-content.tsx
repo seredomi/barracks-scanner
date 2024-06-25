@@ -1,17 +1,19 @@
-import { Content, Button } from '@carbon/react';
+import { useState } from 'react';
+import { Content } from '@carbon/react';
 import { IDScannerPage } from './pages/id-scanner.tsx';
 import { PersonnelPage } from './pages/personnel.tsx';
 import { ScanHistoryPage } from './pages/scan-history.tsx';
 // import { page } from '../App.tsx';
-import { useSelector } from 'react-redux';
-import { PurgeModal } from '../purger.tsx';
+import { useSelector, useDispatch } from 'react-redux';
+// import { CronJob } from 'cron';
+// import { getExpiredPersonnel, AppDispatch }  from '../store';
+// import { PurgeModal } from './purger.tsx';
 
 const PageContent = () => {
 
-    const current = useSelector((state: any) => state.page.currentPage);
-
+    const currentPage = useSelector((state: any) => state.page.currentPage);
     const whichPage = () => {
-        switch (current) {
+        switch (currentPage) {
             case "id-scanner":
                 return <IDScannerPage />;
             case "personnel":
@@ -21,10 +23,29 @@ const PageContent = () => {
         }
     }
 
+    // const expiredPersonnel = useSelector((state: any) => state.expiredPersonnel.expiredData);
+    // const [ purgeModalOpen, setPurgeModalOpen ] = useState(false);
+    // const purgeModalProps = {
+    //     expiredPersonnel: expiredPersonnel,
+    //     purgeModalOpen: purgeModalOpen,
+    //     setPurgeModalOpen: setPurgeModalOpen,
+    // }
+    // const dispatch = useDispatch<AppDispatch>();
+
+    // function promptExpired() {
+    //     console.log("15s elapsed !");
+    //     setPurgeModalOpen(true);
+    //     dispatch(getExpiredPersonnel());
+    // }
+
+    // new CronJob(
+    //     '0,15,30,45 * * * * *',
+    //     promptExpired, null, true
+    // )
+
     return  (
         <Content className='pageContent'>
-            {/*PurgeModal()*/}
-
+            {/*PurgeModal(purgeModalProps)*/}
             {whichPage()}
         </Content>
     )
