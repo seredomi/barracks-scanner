@@ -1,12 +1,7 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getExpiredPersonnel, AppDispatch, emptyPerson }  from '../store';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
         TableBatchAction, TableBatchActions, TableSelectAll, TableSelectRow,
         Button, IconButton, Modal, DatePicker, DatePickerInput } from '@carbon/react';
-import { TrashCan } from '@carbon/icons-react';
-import { CronJob } from 'cron';
 
 
 const headers = [
@@ -18,8 +13,6 @@ const headers = [
 ]
 
 const ExpiredTable = (props: any) => {
-
-    const [selectedCount, setSelectedCount] = useState(0);
 
     return (
         <DataTable rows={props.expiredPersonnel} headers={props.headers} >
