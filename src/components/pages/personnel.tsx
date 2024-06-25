@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { DataTable, TableContainer, TableToolbar, TableToolbarContent, TableToolbarSearch,
         Table, TableHead, TableRow, TableHeader, TableBody, TableCell,
-        Button, IconButton } from '@carbon/react';
+        Button, IconButton, Modal } from '@carbon/react';
 import { AddLarge, OverflowMenuHorizontal } from '@carbon/icons-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { queryPersonnel, AppDispatch, emptyPerson } from '../../store';
 import { checkID } from './id-scanner';
 import PersonDetails from '../person-details';
+import { invoke } from '@tauri-apps/api/tauri';
 
 const headers = [
     { key: 'rank', header: 'Rank' },
@@ -14,6 +15,29 @@ const headers = [
     { key: 'first', header: 'First Name' },
     { key: 'group', header: 'Group' },
 ]
+
+const DeleteConfirmModal = (props: any) => {
+    return (
+        <Modal
+            danger={true}
+            open={props.deleteConfirmOpen}
+            modalHeading='Delete Person'
+            secondaryButtonText='Cancel'
+            primaryButtonText='Delete'
+            onRequestClose={() => { props.setDeleteConfirmOpen(false) }}
+            onRequestSubmit={() => {
+                props.setDeleteConfirmOpen(false);
+                invoke('delete_person', { id: props.person.id }).then(() => {
+                    props.refresh();
+                })
+            }}>
+            <br/>
+            <p>Are you sure you want to permanently delete {props.person.rank} {props.person.last}, {props.person.first}?</p>
+            <br/>
+            <p>Only do this if you have verified that this person is no longer authorized to stay here.</p>
+        </Modal>
+    )
+}
 
 const PersonnelTable = (props: any) => {
 
@@ -84,6 +108,7 @@ export function PersonnelPage() {
     const [ detailsOpen, setDetailsOpen ] = useState(false);
     const [ detailsMode, setDetailsMode ] = useState('view');
     const [ selectedPerson, setSelectedPerson ] = useState(emptyPerson);
+    const [ deleteConfirmOpen, setDeleteConfirmOpen ] = useState(false);
 
     const detailsProps = {
         person: selectedPerson,
@@ -91,6 +116,7 @@ export function PersonnelPage() {
         setDetailsOpen: setDetailsOpen,
         detailsMode: detailsMode,
         setDetailsMode: setDetailsMode,
+        setDeleteConfirmOpen: setDeleteConfirmOpen,
         refresh: refresh
     }
 
@@ -100,8 +126,16 @@ export function PersonnelPage() {
         onSearchChange: onSearchChange,
         setSelectedPerson: setSelectedPerson,
         setDetailsOpen: setDetailsOpen,
-        setDetailsMode: setDetailsMode
+        setDetailsMode: setDetailsMode,
     }
+
+    const deleteConfirmProps = {
+        person: selectedPerson,
+        deleteConfirmOpen: deleteConfirmOpen,
+        setDeleteConfirmOpen: setDeleteConfirmOpen,
+        refresh: refresh
+    }
+
 
     const emptyMessage = () => { 
         if (personnel.length === 0) {
@@ -112,6 +146,7 @@ export function PersonnelPage() {
     return (
         <div>
             <h2>Personnel</h2>
+            {DeleteConfirmModal(deleteConfirmProps)}
             <br/>
             {PersonDetails(detailsProps)}
             {PersonnelTable(tableProps)}

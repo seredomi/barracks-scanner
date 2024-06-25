@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem, DatePicker, DatePickerInput } from '@carbon/react';
+import { TrashCan, Subtract } from '@carbon/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Person } from '../classes/person';
 import { formatCalendarDate } from '../classes/date';
+import { Button } from '@carbon/react';
 
 const PersonDetails = (props: any) => {
 
@@ -300,6 +302,19 @@ const PersonDetails = (props: any) => {
             </div>
 
             <p style={{color: 'red'}}>{ props.detailsMode !== 'view' && anyEmpty ? "All fields are required" : "  " }</p>
+
+            <Button
+                kind={props.detailsMode !== 'new' ? 'danger' : 'ghost'}
+                renderIcon={props.detailsMode !== 'new' ? TrashCan : Subtract /*this is a temp fix*/ }
+                disabled={props.detailsMode === 'new'}
+                onClick={() => {
+                    props.setDetailsOpen(false);
+                    props.setDeleteConfirmOpen(true)
+                }
+                }
+            >
+                {props.detailsMode !== 'new' ? 'Delete' : ' '}
+            </Button>
 
         </Modal>
     )

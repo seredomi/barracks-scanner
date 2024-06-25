@@ -35,6 +35,11 @@ async fn add_person(app_handle: AppHandle, new_person: person::Person) -> () {
 }
 
 #[tauri::command]
+async fn delete_person(app_handle: AppHandle, id: String) -> () {
+    return app_handle.db(|db: &rusqlite::Connection| database::delete_person(db, id));
+}
+
+#[tauri::command]
 async fn query_logs(app_handle: AppHandle, search: String, start_date: String, end_date: String) -> Vec<log::Log> {
     return app_handle.db(|db: &rusqlite::Connection| database::query_logs(db, search, start_date, end_date));
 }
@@ -49,7 +54,15 @@ fn main() {
     tauri::Builder::default()
         .device_event_filter(tauri::DeviceEventFilter::Always)
         .manage(AppState { db: Default::default() })
-        .invoke_handler(tauri::generate_handler![check_id, log_scan, query_personnel, update_person, add_person, query_logs, get_expired])
+        .invoke_handler(tauri::generate_handler![
+            check_id,
+            log_scan,
+            query_personnel,
+            update_person,
+            add_person,
+            delete_person,
+            query_logs,
+            get_expired])
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();
