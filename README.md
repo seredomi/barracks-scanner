@@ -37,8 +37,9 @@ desktop application that allows building security to manage a local database of 
   - [x] input validation
   - [x] wait for formalizeData() to finish before saving storing changes
   - [x] date
-  - [ ] handle apostrophes
+  - [x] handle apostrophes
 - [x] delete
+- [ ] search by room number
 - [ ] sort?
 - [ ] filter?
 ### scan history
@@ -56,6 +57,7 @@ desktop application that allows building security to manage a local database of 
   - [ ] download database file
   - [ ] upload dadtabase file
   - [ ] manual expired personnel purge
+- [ ] building view
 - [x] ensure prepare statements in database.rs
 - [ ] old entry purging
 - [ ] caching for performance?
