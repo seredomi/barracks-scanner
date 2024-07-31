@@ -72,7 +72,7 @@ const PersonDetails = (props: any) => {
     }
 
     function validateFirst() {
-        setNewLast(stripBadChars(upperFirstLetter(newFirst)));
+        setNewFirst(stripBadChars(upperFirstLetter(newFirst)));
         let errorMsg: string = "";
         if (newFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
         setErrorFirst(errorMsg);
