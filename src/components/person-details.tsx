@@ -83,18 +83,28 @@ const PersonDetails = (props: any) => {
     }
 
     function validateAll() {
-        if (newID.length < 1 || newRank.length < 1 || newLast.length < 1 || newFirst.length < 1 || newGroup.length < 1 || newRoom.length < 1 ) {
-            setAnyEmpty(true);
-            setAllValid(false);
-            return;
-        }
-        setAnyEmpty(false);
+        const badChars: string[] = [";", "'"];
+        const allFields: string[] = [newID, newRank, newLast, newFirst, newGroup, newRoom, newLeaveDate];
+        allFields.forEach(field => {
+            if (field.length < 1 || field.includes(";") || field.includes(";")) {
+                setAnyEmpty(true);
+                setAllValid(false);
+                return;
+            }
+            // badChars.forEach(char => {
+            //     if (field.includes(char)) {
 
-        if (errorID.length > 0 || errorLast.length > 0 || errorFirst.length > 0 || errorRoom.length > 0 || errorLeaveDate.length > 0) {
-            setAllValid(false);
-            return;
-        }
-        setAllValid(true);
+            //     }
+            // })
+        })
+
+        const allErrors: string[] = [errorID, errorLast, errorFirst, errorRoom, errorLeaveDate];
+        allErrors.forEach(error => {
+            if (error.length < 1) {
+                setAllValid(false);
+                return;
+            }
+        })
     }
 
     function formalizeData() {
