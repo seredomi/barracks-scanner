@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, ReactNode } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem, DatePicker, DatePickerInput } from '@carbon/react';
 import { TrashCan, Subtract } from '@carbon/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Person } from '../classes/person';
 import { formatCalendarDate } from '../classes/date';
 import { Button } from '@carbon/react';
+import { FolderMinus } from 'lucide-react';
 
 const PersonDetails = (props: any) => {
 
@@ -24,6 +25,7 @@ const PersonDetails = (props: any) => {
     const [ errorLeaveDate, setErrorLeaveDate ] = useState("");
 
     const [ anyEmpty, setAnyEmpty ] = useState(false);
+    const [ anyBadChars, setAnyBadChars ] = useState(false);
     const [ allValid, setAllValid ] = useState(false);
 
     useEffect(() => {
@@ -65,18 +67,21 @@ const PersonDetails = (props: any) => {
     }
 
     function validateLast() {
+        setNewLast(newLast.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
         let errorMsg: string = "";
         if (newLast.length > 30) { errorMsg = "Last name must be less than 30 characters"; }
         setErrorLast(errorMsg);
     }
 
     function validateFirst() {
+        setNewFirst(newFirst.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
         let errorMsg: string = "";
         if (newFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
         setErrorFirst(errorMsg);
     }
 
     function validateRoom() {
+        setNewRoom(newRoom.toUpperCase());
         let errorMsg: string = "";
         if (newRoom.length > 0 && ! /^[\d]{3}[abAB]{1}/.test(newRoom)) { errorMsg = "Room should be 3 digits + A or B"; }
         setErrorRoom(errorMsg);
@@ -84,35 +89,31 @@ const PersonDetails = (props: any) => {
 
     function validateAll() {
         const badChars: string[] = [";", "'"];
-        const allFields: string[] = [newID, newRank, newLast, newFirst, newGroup, newRoom, newLeaveDate];
-        allFields.forEach(field => {
-            if (field.length < 1 || field.includes(";") || field.includes(";")) {
-                setAnyEmpty(true);
-                setAllValid(false);
-                return;
-            }
-            // badChars.forEach(char => {
-            //     if (field.includes(char)) {
+        const allFields: string[] = [newID, newRank, newLast, newFirst, newGroup, newRoom ];
 
-            //     }
-            // })
+        allFields.forEach(field => {
+            if (field.length < 1) {
+            }
+            badChars.forEach(char => {
+                if (field.includes(char)) {
+                    setAnyBadChars(true);
+                    setAllValid(false);
+                    return
+                }
+            })
         })
 
         const allErrors: string[] = [errorID, errorLast, errorFirst, errorRoom, errorLeaveDate];
         allErrors.forEach(error => {
+            console.log(error);
             if (error.length < 1) {
                 setAllValid(false);
                 return;
             }
         })
-    }
-
-    function formalizeData() {
-        // capitalize first letter of each word
-        setNewLast(newLast.replace(/\b\w/g, l => l.toUpperCase()));
-        setNewFirst(newFirst.replace(/\b\w/g, l => l.toUpperCase()));
-        // caliptalize room number letter
-        setNewRoom(newRoom.toUpperCase());
+        setAnyBadChars(false);
+        setAnyEmpty(false);
+        setAllValid(true);
     }
 
     function clearData() {
@@ -121,6 +122,19 @@ const PersonDetails = (props: any) => {
 
         setErrorID(""); setErrorLast(""); setErrorFirst("");
         setErrorRoom(""); setErrorLeaveDate("");
+    }
+
+    const bottomText = (): ReactNode => {
+        const badChars: string[] = [";", "'"];
+        if (props.detailsMode != 'view') {
+            if (anyEmpty) return "All fields must be entered"
+            if (anyBadChars) {
+                let str: string = "No fields can contain: "
+                badChars.forEach(char => str = str + "\"" + char + "\"");
+                return str
+            }
+        }
+        return "  "
     }
 
     return (
@@ -140,7 +154,7 @@ const PersonDetails = (props: any) => {
                     props.setDetailsMode('edit');
                 }
                 else if (props.detailsMode === 'edit') {
-                    formalizeData();
+                    console.log("last: " + newLast + " first: " + newFirst + " room: " + newRoom);
                     //TODO: somehow wait for formalize to take effect before saving changes
                     invoke('update_person', {oldId: props.person.id, newInfo: {
                         id: newID,
@@ -159,7 +173,6 @@ const PersonDetails = (props: any) => {
                     clearData();
                 }
                 else { // new person
-                    formalizeData();
                     invoke('add_person', {newPerson: {
                         id: newID,
                         rank: newRank,
@@ -311,7 +324,9 @@ const PersonDetails = (props: any) => {
                 </DatePicker>
             </div>
 
-            <p style={{color: 'red'}}>{ props.detailsMode !== 'view' && anyEmpty ? "All fields are required" : "  " }</p>
+            <p style={{color: 'red'}}>{bottomText()}
+
+            </p>
 
             <Button
                 kind={props.detailsMode !== 'new' ? 'danger' : 'ghost'}
