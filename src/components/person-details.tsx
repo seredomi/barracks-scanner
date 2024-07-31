@@ -1,11 +1,10 @@
-import { useState, useEffect, useRef, ReactNode } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, TextInput, Select, SelectItemGroup, SelectItem, DatePicker, DatePickerInput } from '@carbon/react';
 import { TrashCan, Subtract } from '@carbon/icons-react';
 import { invoke } from '@tauri-apps/api/tauri';
 import { Person } from '../classes/person';
 import { formatCalendarDate } from '../classes/date';
 import { Button } from '@carbon/react';
-import { FolderMinus } from 'lucide-react';
 
 const PersonDetails = (props: any) => {
 
@@ -25,7 +24,6 @@ const PersonDetails = (props: any) => {
     const [ errorLeaveDate, setErrorLeaveDate ] = useState("");
 
     const [ anyEmpty, setAnyEmpty ] = useState(false);
-    const [ anyBadChars, setAnyBadChars ] = useState(false);
     const [ allValid, setAllValid ] = useState(false);
 
     useEffect(() => {
@@ -49,9 +47,9 @@ const PersonDetails = (props: any) => {
 
 
     async function validateID() {
-        let errorMsg: string = "";
+        let errorMsg: string = "" //checkBadChars(newID);
+        setNewID(stripBadChars(newID));
         if (newID.length > 40) { errorMsg = "ID must be less than 40 characters"; }
-        else if (newID.includes(';')) { errorMsg = "ID must not contain ; "; }
         // ensure ID is unique for new entries
         else if (props.detailsMode === 'new') {
             await invoke ('check_id', {id: newID}).then(
@@ -67,53 +65,45 @@ const PersonDetails = (props: any) => {
     }
 
     function validateLast() {
-        setNewLast(newLast.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
+        setNewLast(stripBadChars(upperFirstLetter(newLast)));
         let errorMsg: string = "";
         if (newLast.length > 30) { errorMsg = "Last name must be less than 30 characters"; }
         setErrorLast(errorMsg);
     }
 
     function validateFirst() {
-        setNewFirst(newFirst.toLowerCase().replace(/\b\w/g, c => c.toUpperCase()));
+        setNewLast(stripBadChars(upperFirstLetter(newFirst)));
         let errorMsg: string = "";
         if (newFirst.length > 30) { errorMsg = "First name must be less than 30 characters"; }
         setErrorFirst(errorMsg);
     }
 
     function validateRoom() {
-        setNewRoom(newRoom.toUpperCase());
+        setNewRoom(stripBadChars(newRoom).toUpperCase());
         let errorMsg: string = "";
-        if (newRoom.length > 0 && ! /^[\d]{3}[abAB]{1}/.test(newRoom)) { errorMsg = "Room should be 3 digits + A or B"; }
+        if (newRoom.length > 0 && ! /^[\d]{3}[abAB]{1}$/.test(newRoom)) { errorMsg = "Room should be 3 digits + A or B"; }
         setErrorRoom(errorMsg);
     }
 
     function validateAll() {
-        const badChars: string[] = [";", "'"];
-        const allFields: string[] = [newID, newRank, newLast, newFirst, newGroup, newRoom ];
 
+        setAnyEmpty(false)
+        setAllValid(true)
+        
+        const allFields: string[] = [newID, newRank, newLast, newFirst, newGroup, newRoom ];
         allFields.forEach(field => {
             if (field.length < 1) {
+                setAnyEmpty(true);
+                setAllValid(false)
             }
-            badChars.forEach(char => {
-                if (field.includes(char)) {
-                    setAnyBadChars(true);
-                    setAllValid(false);
-                    return
-                }
-            })
         })
 
         const allErrors: string[] = [errorID, errorLast, errorFirst, errorRoom, errorLeaveDate];
         allErrors.forEach(error => {
-            console.log(error);
-            if (error.length < 1) {
+            if (error.length > 1) {
                 setAllValid(false);
-                return;
             }
         })
-        setAnyBadChars(false);
-        setAnyEmpty(false);
-        setAllValid(true);
     }
 
     function clearData() {
@@ -124,17 +114,11 @@ const PersonDetails = (props: any) => {
         setErrorRoom(""); setErrorLeaveDate("");
     }
 
-    const bottomText = (): ReactNode => {
-        const badChars: string[] = [";", "'"];
-        if (props.detailsMode != 'view') {
-            if (anyEmpty) return "All fields must be entered"
-            if (anyBadChars) {
-                let str: string = "No fields can contain: "
-                badChars.forEach(char => str = str + "\"" + char + "\"");
-                return str
-            }
-        }
-        return "  "
+    function stripBadChars(input: string): string {
+        return input.replace(/[';]/g, '');
+    }
+    function upperFirstLetter(input: string): string {
+        return input.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
     }
 
     return (
@@ -143,7 +127,7 @@ const PersonDetails = (props: any) => {
             modalHeading={ props.detailsMode === 'view' ? "View details" : props.detailsMode === 'edit' ? "Edit details" : "New entry" }
             secondaryButtonText={ props.detailsMode === 'view' ? "Close" : "Cancel" }
             primaryButtonText={ props.detailsMode === 'view' ? "Edit": "Save" }
-            primaryButtonDisabled={props.detailsMode === 'view' ? false : !allValid}
+            primaryButtonDisabled={ props.detailsMode === 'view' ? false : !allValid }
             onRequestClose={() => {
                 props.setDetailsOpen(false)
                 props.setDetailsMode('view')
@@ -154,7 +138,6 @@ const PersonDetails = (props: any) => {
                     props.setDetailsMode('edit');
                 }
                 else if (props.detailsMode === 'edit') {
-                    console.log("last: " + newLast + " first: " + newFirst + " room: " + newRoom);
                     invoke('update_person', {oldId: props.person.id, newInfo: {
                         id: newID,
                         rank: newRank,
@@ -323,7 +306,8 @@ const PersonDetails = (props: any) => {
                 </DatePicker>
             </div>
 
-            <p style={{color: 'red'}}>{bottomText()}
+            <p style={{color: 'red'}}> {
+                props.detailsMode === 'edit' && anyEmpty ?  "All fields must be entered" : "  " }
 
             </p>
 
