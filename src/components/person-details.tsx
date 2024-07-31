@@ -155,7 +155,6 @@ const PersonDetails = (props: any) => {
                 }
                 else if (props.detailsMode === 'edit') {
                     console.log("last: " + newLast + " first: " + newFirst + " room: " + newRoom);
-                    //TODO: somehow wait for formalize to take effect before saving changes
                     invoke('update_person', {oldId: props.person.id, newInfo: {
                         id: newID,
                         rank: newRank,
@@ -329,16 +328,16 @@ const PersonDetails = (props: any) => {
             </p>
 
             <Button
-                kind={props.detailsMode !== 'new' ? 'danger' : 'ghost'}
-                renderIcon={props.detailsMode !== 'new' ? TrashCan : Subtract /*this is a temp fix*/ }
-                disabled={props.detailsMode === 'new'}
+                kind={props.detailsMode === 'view' ? 'danger' : 'ghost'}
+                renderIcon={props.detailsMode === 'view' ? TrashCan : Subtract /*this is a temp fix*/ }
+                disabled={props.detailsMode !== 'view'}
                 onClick={() => {
                     props.setDetailsOpen(false);
                     props.setDeleteConfirmOpen(true)
                 }
                 }
             >
-                {props.detailsMode !== 'new' ? 'Delete' : ' '}
+                {props.detailsMode === 'view' ? 'Delete' : ' '}
             </Button>
 
         </Modal>
