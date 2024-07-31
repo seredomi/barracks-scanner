@@ -1,6 +1,6 @@
 # barracks scanner
 desktop application that allows building security to manage a local database of authorized personnel, scan ID cards, and view scanning history
-<br/>
+<br/> <br/>
 [here](https://youtu.be/LOH57WzeF-o?si=sBYoFxBO9eM3q8WE) is a video demonstrating its capabilities
 
 ## tools
