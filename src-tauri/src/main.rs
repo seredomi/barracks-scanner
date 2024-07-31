@@ -66,7 +66,7 @@ fn main() {
         .setup(|app| {
             let handle = app.handle();
             let app_state: State<AppState> = handle.state();
-            let db = database::connect("barracks.db".to_string()).expect("Couldn't connect to 'barracks.db'");
+            let db = database::connect(".barracks.db".to_string()).expect("Couldn't connect to 'barracks.db'");
             *app_state.db.lock().unwrap() = Some(db);
 
             Ok(())
